@@ -99,4 +99,4 @@ To learn more about the technologies used in this project, check out the followi
 - [React Router Documentation](https://reactrouter.com/docs/)
 - [Framer Motion Documentation](https://www.framer.com/motion/)
 
-If you have any questions or need assistance, please don't hesitate to reach out to the team or consult the [Getting Help](../docs/getting-help.md) guide.
+If you have any questions or need assistance, please don't hesitate to reach out to the team or consult the [Getting Help](../HELP-ME.md) guide.
