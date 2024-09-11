@@ -9,6 +9,8 @@ import Dashboard from './pages/Dashboard';
 import Expenses from './pages/Expenses';
 import Budget from './pages/Budget';
 import Goals from './pages/Goals';
+import Authentication from "./pages/Authentication";
+import SignUp from "./pages/SignUp";
 
 function App() {
   return (
@@ -32,6 +34,8 @@ function App() {
                 <Route path="/expenses" element={<Expenses />} />
                 <Route path="/budget" element={<Budget />} />
                 <Route path="/goals" element={<Goals />} />
+                <Route path="/signup" element={<SignUp/>}/>
+                <Route path="/login" element={<Authentication/>}/>
               </Routes>
             </Box>
           </Flex>
