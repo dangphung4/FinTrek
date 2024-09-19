@@ -24,7 +24,7 @@ function App() {
               overflowY="auto"
               width="calc(100% - 240px)"
             >
-              <RoutesWrapper /> {/* Use the new component */}
+              <RoutesWrapper /> {/* Use the new components */}
             </Box>
           </Flex>
         </Box>

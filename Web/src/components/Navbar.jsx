@@ -21,6 +21,7 @@ import { FaSearch, FaBell, FaChevronDown } from 'react-icons/fa';
 import { Link, useNavigate } from 'react-router-dom';
 import supabase from "../supabaseClient";
 
+
 function Navbar() {
   const bgColor = useColorModeValue('white', 'gray.800');
   const textColor = useColorModeValue('gray.800', 'white');

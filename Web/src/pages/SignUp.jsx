@@ -57,7 +57,7 @@ function SignUp() {
           return;
         }
 
-        //sign up user
+        //sign up users
         const { data:signUpData, error:signUpError } = await supabase.auth.signUp({
         email,
         password,

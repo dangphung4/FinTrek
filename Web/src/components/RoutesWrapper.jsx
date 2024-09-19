@@ -39,6 +39,7 @@ function RoutesWrapper() {
       setLoading(false);
     };
 
+    
     // Handle password recovery event
     supabase.auth.onAuthStateChange(async (event, session) => {
       if (event === 'PASSWORD_RECOVERY') {

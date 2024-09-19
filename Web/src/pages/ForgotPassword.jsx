@@ -18,6 +18,7 @@ function ForgotPassword() {
   const [loading, setLoading] = useState(false);
   const toast = useToast();
   const navigate = useNavigate();
+  
 
   const handleSendResetLink = async () => {
     setLoading(true);

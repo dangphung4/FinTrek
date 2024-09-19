@@ -46,7 +46,8 @@ function Authentication() {
       });
       navigate("/");
     }
-
+ 
+    
     if (data.session) {
       localStorage.setItem('userToken', data.session.access_token);
       navigate('/'); // Redirect to dashboard on successful login
