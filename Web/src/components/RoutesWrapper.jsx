@@ -12,7 +12,7 @@ import ForgotPassword from '../pages/ForgotPassword';
 import ResetPassword from '../pages/ResetPassword';
 
 
-function RoutesWrapper() {
+function RoutesWrapper({setIsAuthPath}) {
   const [loading, setLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const navigate = useNavigate();
@@ -27,13 +27,19 @@ function RoutesWrapper() {
         setIsAuthenticated(true);
         // Only redirect to the dashboard if NOT on the password reset page
         if (location.pathname !== '/reset-password' && location.pathname !== '/login' && location.pathname !== '/signup' && location.pathname !== '/forgot-password') {
+          setIsAuthPath(false);
           navigate('/'); // Redirect to dashboard if logged in AND not on reset-password page
+        }else{
+          setIsAuthPath(true);
         }
       } else {
         setIsAuthenticated(false);
         // Allow navigation to login/signup pages if not authenticated
         if (location.pathname !== '/login' && location.pathname !== '/signup' && location.pathname !== '/forgot-password' && location.pathname !== '/reset-password') {
-            navigate('/login');
+          setIsAuthPath(true);
+          navigate('/login');
+        }else{
+          setIsAuthPath(true);
         }
       }
       setLoading(false);
@@ -43,12 +49,14 @@ function RoutesWrapper() {
     // Handle password recovery event
     supabase.auth.onAuthStateChange(async (event, session) => {
       if (event === 'PASSWORD_RECOVERY') {
+        setIsAuthPath(true);
         navigate('/reset-password'); // Redirect to reset password page
       }
     });
 
     checkUserSession();
   }, [navigate]);
+
 
   if (loading) return <div>Loading...</div>;
 
