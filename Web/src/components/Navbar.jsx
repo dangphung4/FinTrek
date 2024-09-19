@@ -18,12 +18,24 @@ import {
 } from '@chakra-ui/react';
 import { ColorModeSwitcher } from '../ColorModeSwitcher';
 import { FaSearch, FaBell, FaChevronDown } from 'react-icons/fa';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import supabase from "../supabaseClient";
 
 function Navbar() {
   const bgColor = useColorModeValue('white', 'gray.800');
   const textColor = useColorModeValue('gray.800', 'white');
   const borderColor = useColorModeValue('gray.200', 'gray.700');
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    try {
+      await supabase.auth.signOut(); // Sign out the user
+      localStorage.removeItem('userToken'); // Remove user token from local storage
+      navigate('/login'); // Redirect to login page
+    } catch (error) {
+      console.error('Error logging out:', error);
+    }
+  };
 
   return (
     <Box bg={bgColor} px={4} boxShadow="sm" position="fixed" width="full" zIndex="sticky">
@@ -71,7 +83,7 @@ function Navbar() {
               <MenuItem>Profile</MenuItem>
               <MenuItem>Settings</MenuItem>
               <MenuItem>Billing</MenuItem>
-              <MenuItem>Sign out</MenuItem>
+              <MenuItem onClick={handleLogout}>Sign out</MenuItem>
             </MenuList>
           </Menu>
 

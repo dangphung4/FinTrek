@@ -1,14 +1,11 @@
 // src/App.jsx
 import React from 'react';
 import { ChakraProvider, Box, Flex } from '@chakra-ui/react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router } from 'react-router-dom';
 import theme from './theme';
 import Navbar from './components/Navbar';
 import Sidebar from './components/Sidebar';
-import Dashboard from './pages/Dashboard';
-import Expenses from './pages/Expenses';
-import Budget from './pages/Budget';
-import Goals from './pages/Goals';
+import RoutesWrapper from './components/RoutesWrapper'; // Import the new component
 
 function App() {
   return (
@@ -27,12 +24,7 @@ function App() {
               overflowY="auto"
               width="calc(100% - 240px)"
             >
-              <Routes>
-                <Route path="/" element={<Dashboard />} />
-                <Route path="/expenses" element={<Expenses />} />
-                <Route path="/budget" element={<Budget />} />
-                <Route path="/goals" element={<Goals />} />
-              </Routes>
+              <RoutesWrapper /> {/* Use the new component */}
             </Box>
           </Flex>
         </Box>
