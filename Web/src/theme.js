@@ -12,6 +12,9 @@ const theme = extendTheme({
         bg: props.colorMode === 'dark' ? 'gray.800' : 'gray.50',
         color: props.colorMode === 'dark' ? 'white' : 'gray.800',
       },
+      h1: {
+
+      }
     }),
   },
   components: {
@@ -22,7 +25,29 @@ const theme = extendTheme({
         },
       }),
     },
+    Heading: {
+      baseStyle: (props) => ({
+        _hover: {
+          color: props.colorMode === 'dark' ? 'whiteAlpha.200' : 'blackAlpha.100',
+        },
+      }),
+    },
+    Box: {
+      baseStyle: (props) => ({
+        _hover: {
+          bg: props.colorMode === 'dark' ? 'gray.800' : 'gray.50',
+        },
+      }),
+    },
+    MenuList: {
+      baseStyle: (props) => ({
+        _hover: {
+          borderColor: props.colorMode === 'dark' ? 'gray.200' : 'gray.700',
+        },
+      }),
+    },
   },
+
 });
 
 export default theme;

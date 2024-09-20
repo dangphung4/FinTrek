@@ -49,7 +49,7 @@ function ForgotPassword() {
   return (
     <ChakraProvider theme={theme}>
       <Box
-        minHeight="100vh"
+        minHeight="100dvh"
         display="flex"
         alignItems="center"
         justifyContent="center"
@@ -68,6 +68,11 @@ function ForgotPassword() {
           >
             Send Reset Link
           </Button>
+          <Link to="/login">
+            <Text fontSize="xs" as="u">
+              Sign In
+            </Text>
+          </Link>
         </VStack>
       </Box>
     </ChakraProvider>
