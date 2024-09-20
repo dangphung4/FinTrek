@@ -18,18 +18,28 @@ import {
 } from '@chakra-ui/react';
 import { ColorModeSwitcher } from '../ColorModeSwitcher';
 import { FaSearch, FaBell, FaChevronDown } from 'react-icons/fa';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import supabase from "../supabaseClient";
+
 
 function Navbar() {
-  const bgColor = useColorModeValue('white', 'gray.800');
-  const textColor = useColorModeValue('gray.800', 'white');
-  const borderColor = useColorModeValue('gray.200', 'gray.700');
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    try {
+      await supabase.auth.signOut(); // Sign out the user
+      localStorage.removeItem('userToken'); // Remove user token from local storage
+      navigate('/login'); // Redirect to login page
+    } catch (error) {
+      console.error('Error logging out:', error);
+    }
+  };
 
   return (
-    <Box bg={bgColor} px={4} boxShadow="sm" position="fixed" width="full" zIndex="sticky">
+    <Box px={4} boxShadow="sm" position="fixed" width="full" zIndex="sticky">
       <Flex h={16} alignItems="center" justifyContent="space-between">
         <Flex alignItems="center">
-          <Heading size="lg" color={textColor} mr={8}>FinTrek</Heading>
+          <Heading size="lg" mr={8}>FinTrek</Heading>
           <Flex display={{ base: 'none', md: 'flex' }}>
             {/* <Button as={Link} to="/" variant="ghost" mr={3}>Dashboard</Button>
             <Button as={Link} to="/expenses" variant="ghost" mr={3}>Expenses</Button>
@@ -67,11 +77,11 @@ function Navbar() {
                 src={'https://avatars.dicebear.com/api/male/username.svg'}
               />
             </MenuButton>
-            <MenuList alignItems={'center'} borderColor={borderColor}>
+            <MenuList alignItems={'center'}>
               <MenuItem>Profile</MenuItem>
               <MenuItem>Settings</MenuItem>
               <MenuItem>Billing</MenuItem>
-              <MenuItem>Sign out</MenuItem>
+              <MenuItem onClick={handleLogout}>Sign out</MenuItem>
             </MenuList>
           </Menu>
 
