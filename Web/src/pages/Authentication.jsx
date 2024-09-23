@@ -65,7 +65,7 @@ function Authentication() {
         justifyContent="center"
       >
         <VStack spacing="16px">
-          <img src={logo} width="500px" alt="Logo" />
+          <img src={logo} width="300px" alt="Logo" />
           <Input
             placeholder="Email"
             width="300px"

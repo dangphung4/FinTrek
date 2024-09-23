@@ -22,7 +22,7 @@ function RoutesWrapper({ setIsAuthPath }) {
   const handleSessionCheck = (session) => {
     if (session) {
       setIsAuthenticated(true);
-      if (!isAuthPath(location.pathname)) {
+      if (!isAuthPath(location.pathname) && location.pathname=="/") {
         setIsAuthPath(false);
         navigate('/'); // Redirect to dashboard if logged in AND not on an auth page
       } else {
