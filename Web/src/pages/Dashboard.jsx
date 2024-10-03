@@ -9,6 +9,7 @@ import {
   Icon,
   Button,
   useColorModeValue,
+  useBreakpointValue
 } from "@chakra-ui/react";
 import {
   LineChart,
@@ -57,6 +58,9 @@ function Dashboard() {
   const chartLineColor = useColorModeValue("#8884d8", "#B794F4");
   const chartLineColor2 = useColorModeValue("#82ca9d", "#4FD1C5");
 
+  const legendMarginBottom = useBreakpointValue({ base: "none", lg: "20px",xl:'none' });
+  const axisTicks = useBreakpointValue({base:13,megasmall:16});
+
   return (
     <Box width="100%">
       <PageHeader title="Dashboard" />
@@ -98,10 +102,10 @@ function Dashboard() {
               Income vs Expenses
             </Text>
             <ResponsiveContainer width="100%" height="90%">
-              <LineChart data={lineChartData}>
+              <LineChart margin={{left:-27 ,right:10}} data={lineChartData}>
                 <CartesianGrid strokeDasharray="3 3" stroke={borderColor} />
-                <XAxis dataKey="name" stroke={textColor} />
-                <YAxis stroke={textColor} />
+                <XAxis dataKey="name" stroke={textColor} tick={{fontSize: axisTicks}}/>
+                <YAxis stroke={textColor} tick={{fontSize: axisTicks}}/>
                 <Tooltip
                   contentStyle={{ backgroundColor: bgColor, color: textColor }}
                 />
@@ -140,15 +144,18 @@ function Dashboard() {
                     />
                   ))}
                 </Pie>
-                <Tooltip
+                {<Tooltip
                   contentStyle={{ backgroundColor: bgColor, color: textColor }}
-                />
-                <Legend
+                />}
+                {<Legend
                   wrapperStyle={{
                     paddingTop: "20px",
                     color: textColor,
+                    marginBottom: legendMarginBottom,
                   }}
-                />
+                  
+                  
+                />}
               </PieChart>
             </ResponsiveContainer>
           </Box>
@@ -160,7 +167,7 @@ function Dashboard() {
           <Text fontSize="xl" fontWeight="bold" color={textColor}>
             Recent Transactions
           </Text>
-          <Button leftIcon={<FaPlus />} colorScheme="blue" size="sm">
+          <Button leftIcon={<FaPlus />} width={{base:'150px',megasmall:'auto'}} fontSize={{base:12,megasmall:'inherit'}} colorScheme="blue" size="sm">
             Add Transaction
           </Button>
         </Flex>
