@@ -1,6 +1,6 @@
 // src/pages/Expenses.jsx
 import React from 'react';
-import { Box, Table, Thead, Tbody, Tr, Th, Td, useColorModeValue, Button, Flex, Icon, Text, SimpleGrid } from '@chakra-ui/react';
+import { Box, Table, Thead, Tbody, Tr, Th, Td, useColorModeValue, Button, Flex, Icon, Text, SimpleGrid, Stack, HStack, Grid } from '@chakra-ui/react';
 import { faker } from '@faker-js/faker';
 import { FaPlus, FaFilter, FaDownload } from 'react-icons/fa';
 import PageHeader from '../components/PageHeader';
@@ -18,7 +18,7 @@ function Expenses() {
   const bgColor = useColorModeValue('white', 'gray.700');
 
   return (
-    <Box width="100%">
+    <Box width="100%" >
       <PageHeader title="Expenses" />
       <SimpleGrid columns={{ base: 1, md: 3 }} spacing={6} mb={8}>
         <DashboardCard
@@ -43,7 +43,7 @@ function Expenses() {
           icon={FaDownload}
         />
       </SimpleGrid>
-      <Box bg={bgColor} p={6} borderRadius="lg" boxShadow="sm" overflowX="auto">
+      <Box display={{base:'none',xs:'block'}} bg={bgColor} p={6} borderRadius="lg" boxShadow="sm" overflowX="auto">
         <Flex justify="space-between" align="center" mb={4}>
           <Text fontSize="xl" fontWeight="bold">Expense List</Text>
           <Flex>
@@ -51,7 +51,7 @@ function Expenses() {
             <Button leftIcon={<FaPlus />} colorScheme="blue">Add Expense</Button>
           </Flex>
         </Flex>
-        <Table variant="simple">
+        <Table variant="simple" size = {{base: 'sm',sm: 'md'}}>
           <Thead>
             <Tr>
               <Th>Date</Th>
@@ -71,6 +71,44 @@ function Expenses() {
             ))}
           </Tbody>
         </Table>
+      </Box>
+      {/* below 535w use cards instead of table */}
+      <Box display={{base:'block',xs:'none'}} mt = {6} bg={bgColor} p={4} borderRadius="lg" boxShadow="sm" overflowX="auto">
+        <Flex justify="space-between" align="center" mb={4}>
+          <Text fontSize="xl" fontWeight="bold">Expense List</Text>
+          <Flex>
+            <Stack>
+              <Button display = {{base:'block',xxxs:'none'}} size={{base:'sm',xxxs:'md'}} leftIcon={<FaFilter />} variant="outline" maxWidth={{base:'125px',megasmall:'none'}} mr={2}>Filter</Button>
+              <Button display = {{base:'block',xxxs:'none'}} size={{base:'sm',xxxs:'md'}} leftIcon={<FaPlus />} colorScheme="blue" maxWidth={{base:'125px',megasmall:'none'}} mr={2}>Add Expense</Button>
+            </Stack>
+            <Button display = {{base:'none',xxxs:'flex'}} leftIcon={<FaFilter />} variant="outline" mr={2}>Filter</Button>
+            <Button display = {{base:'none',xxxs:'flex'}} leftIcon={<FaPlus />} colorScheme="blue">Add Expense</Button>
+          </Flex>
+        </Flex>
+        <SimpleGrid columns={1} spacing={6}>
+          {expenses.map((expense) => (
+            <Box key={expense.id} p={1} borderRadius="sm" borderWidth="3px" boxShadow="sm" bg={bgColor}>
+              <Stack spacing={2}>
+                <HStack justify="space-between">
+                  <Text fontSize="sm" fontWeight="bold">Date:</Text>
+                  <Text fontSize="sm">{expense.date}</Text>
+                </HStack>
+                <Grid templateColumns="auto 1fr" alignItems="center" gap={2}>
+                  <Text fontSize="sm" fontWeight="bold">Description:</Text>
+                  <Text fontSize="sm" textAlign="right" wordBreak="break-word">{expense.description}</Text>
+                </Grid>
+                <HStack justify="space-between">
+                  <Text fontSize="sm" fontWeight="bold">Category:</Text>
+                  <Text fontSize="sm">{expense.category}</Text>
+                </HStack>
+                <HStack justify="space-between">
+                  <Text fontSize="sm" fontWeight="bold">Amount:</Text>
+                  <Text fontSize="sm" isNumeric>${expense.amount}</Text>
+                </HStack>
+              </Stack>
+            </Box>
+          ))}
+        </SimpleGrid>
       </Box>
     </Box>
   );

@@ -42,7 +42,7 @@ function Budget() {
       <Box bg={bgColor} p={6} borderRadius="lg" boxShadow="sm">
         <Flex justify="space-between" align="center" mb={4}>
           <Text fontSize="xl" fontWeight="bold">Budget Breakdown</Text>
-          <Button leftIcon={<FaPlus />} colorScheme="blue">Add Category</Button>
+          <Button leftIcon={<FaPlus />} colorScheme="blue" width={{base:'180px',megasmall:'auto'}} >Add Category</Button>
         </Flex>
         <SimpleGrid columns={{ base: 1, md: 2 }} spacing={6}>
           {categories.map(category => {

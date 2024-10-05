@@ -24,6 +24,7 @@ import supabase from "../supabaseClient";
 
 function Navbar() {
   const navigate = useNavigate();
+  const bgColor = useColorModeValue('white', 'gray.800');
 
   const handleLogout = async () => {
     try {
@@ -36,16 +37,11 @@ function Navbar() {
   };
 
   return (
-    <Box px={4} boxShadow="sm" position="fixed" width="full" zIndex="sticky">
+    <Box bg={bgColor}  borderBottom='1px' borderBottomColor={useColorModeValue('gray.200', 'gray.700')} px={4} boxShadow="sm" position="fixed" width="full" zIndex="sticky">
       <Flex h={16} alignItems="center" justifyContent="space-between">
-        <Flex alignItems="center">
-          <Heading size="lg" mr={8}>FinTrek</Heading>
-          <Flex display={{ base: 'none', md: 'flex' }}>
-            {/* <Button as={Link} to="/" variant="ghost" mr={3}>Dashboard</Button>
-            <Button as={Link} to="/expenses" variant="ghost" mr={3}>Expenses</Button>
-            <Button as={Link} to="/budget" variant="ghost" mr={3}>Budget</Button>
-            <Button as={Link} to="/goals" variant="ghost">Goals</Button> */}
-          </Flex>
+        {/* Centering the Heading based on screen size */}
+        <Flex flex={1} justifyContent={{ base: 'center', md: 'flex-start' }} paddingLeft={{ base:'12',megasmall:'122', md: '0'}} alignItems="center">
+          <Heading size="lg">FinTrek</Heading>
         </Flex>
 
         <Flex alignItems="center">

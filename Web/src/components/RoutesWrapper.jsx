@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Route, Routes, useNavigate } from 'react-router-dom';
+import { Route, Routes, useNavigate, useLocation } from 'react-router-dom';
 import supabase from '../supabaseClient';
 import Dashboard from '../pages/Dashboard';
 import Expenses from '../pages/Expenses';
@@ -14,6 +14,7 @@ function RoutesWrapper({ setIsAuthPath }) {
   const [loading, setLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const authPaths = ['/login', '/signup', '/forgot-password', '/reset-password'];
 
@@ -22,10 +23,12 @@ function RoutesWrapper({ setIsAuthPath }) {
   const handleSessionCheck = (session) => {
     if (session) {
       setIsAuthenticated(true);
-      if (!isAuthPath(location.pathname) && location.pathname=="/") {
+      if (!isAuthPath(location.pathname) && location.pathname==="/") {
         setIsAuthPath(false);
         navigate('/'); // Redirect to dashboard if logged in AND not on an auth page
-      } else {
+      } else if(!isAuthPath(location.pathname)){
+        setIsAuthPath(false);
+      }else{
         setIsAuthPath(true);
       }
     } else {
@@ -55,7 +58,7 @@ function RoutesWrapper({ setIsAuthPath }) {
     });
 
     checkUserSession();
-  }, [navigate]);
+  }, [navigate, location.pathname]);
 
   if (loading) return <div>Loading...</div>;
 

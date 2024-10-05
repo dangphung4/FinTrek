@@ -1,7 +1,21 @@
 // src/theme.js
 import { extendTheme } from '@chakra-ui/react';
 
+const breakpoints = {
+  base: '0px',
+  megasmall:'380px',
+  xxxs: '445px',
+  xxs: '495px',
+  xs: '535px',
+  sm: '628px',
+  md: '868px',
+  lg: '960px',
+  xl: '1037px',
+  '2xl': '1536px',
+}
+
 const theme = extendTheme({
+  breakpoints,
   config: {
     initialColorMode: 'light',
     useSystemColorMode: false,
