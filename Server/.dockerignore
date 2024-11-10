@@ -1,1 +1,17 @@
-node_modules
+# Node modules (already installed during the build, no need to copy)
+node_modules/
+
+# IDE configuration files
+.idea/
+.vscode/
+
+# Logs
+logs/
+*.log
+
+# Environment files
+.env
+
+# OS-specific files
+.DS_Store
+Thumbs.db
