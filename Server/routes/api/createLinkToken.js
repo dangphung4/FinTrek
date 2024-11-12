@@ -9,6 +9,7 @@ const client = require('../../services/plaidClient')
 const PLAID_PRODUCTS = (process.env.PLAID_PRODUCTS || Products.Transactions).split(
     ',',
 );
+
 // PLAID_COUNTRY_CODES is a comma-separated list of countries for which users
 // will be able to select institutions from.
 const PLAID_COUNTRY_CODES = (process.env.PLAID_COUNTRY_CODES || 'US').split(
@@ -27,17 +28,13 @@ const PLAID_REDIRECT_URI = process.env.PLAID_REDIRECT_URI || '';
 const PLAID_ANDROID_PACKAGE_NAME = process.env.PLAID_ANDROID_PACKAGE_NAME || '';
 
 
-router.get('/', (req, res) => {
-    res.send('user link')
-});
-
 router.post('/', function (req, res, next) {
     Promise.resolve()
     .then(async function () {
       const configs = {
         user: {
           // This should correspond to a unique id for the current user.
-          client_user_id: 'user-id1',
+          client_user_id: 'user_' + req.body.userID,
         },
         client_name: 'FINTREK',
         products: PLAID_PRODUCTS,

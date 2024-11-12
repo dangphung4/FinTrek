@@ -7,6 +7,7 @@ import Navbar from './components/Navbar';
 import Sidebar from './components/Sidebar';
 import RoutesWrapper from './components/RoutesWrapper'; // Import the new component
 import Context from "./context";
+import supabase from './supabaseClient';
 
 function App() {
   /* const location = useLocation(); */
@@ -18,8 +19,7 @@ function App() {
     setIsAuthPath(authPaths.includes(location.pathname));
   }, [location.pathname]);
 
-  const { linkSuccess, isPaymentInitiation, itemId, dispatch } =
-    useContext(Context);
+  const { itemId, dispatch } = useContext(Context);
 
   const getInfo = useCallback(async () => {
     console.log('initiated get info')
@@ -47,8 +47,14 @@ function App() {
   }, [dispatch]);
     
 
-  const generateUserToken = useCallback(async () => {
-    const response = await fetch("http://localhost:8080/api/create_user_token", { method: "POST" });
+  const generateUserToken = useCallback(async (userID) => {
+    const response = await fetch("http://localhost:8080/api/create_user_token", { 
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ userID })
+    });
     if (!response.ok) {
       dispatch({ type: "SET_STATE", state: { userToken: null } });
       return;
@@ -70,8 +76,14 @@ function App() {
     }
   }, [dispatch]);
 
-  const generateToken = useCallback(async () => {
-    const response = await fetch("http://localhost:8080/api/create_link_token", { method: "POST" });
+  const generateToken = useCallback(async (userID) => {
+    const response = await fetch("http://localhost:8080/api/create_link_token", { 
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ userID })
+    });
     if (!response.ok) {
       dispatch({ type: "SET_STATE", state: { linkToken: null } });
       return;
@@ -93,6 +105,8 @@ function App() {
   
 
   useEffect(() => {
+    if (isAuthPath){ return; }
+
     const init = async () => {
       const { isUserTokenFlow } = await getInfo(); // used to determine which path to take when generating token
       // do not generate a new token for OAuth redirect; instead
@@ -106,14 +120,15 @@ function App() {
         });
         return;
       }
-
+      const { data: { user } } = await supabase.auth.getUser()
+      const userID = user?.id;
       if (isUserTokenFlow) {
-        await generateUserToken();
+        await generateUserToken(userID);
       }
-      generateToken();
+      generateToken(userID);
     };
     init();
-  }, [dispatch, generateToken, generateUserToken, getInfo]);
+  }, [dispatch, generateToken, generateUserToken, getInfo, isAuthPath]);
 
   return (
     <ChakraProvider theme={theme}>
