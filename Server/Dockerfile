@@ -7,7 +7,8 @@ WORKDIR /server
 COPY package*.json ./
 
 # Install dependencies
-RUN npm install
+RUN npm ci && \
+    npm prune --production
 
 # Copy specific files and folders needed to run the app
 COPY server.js ./

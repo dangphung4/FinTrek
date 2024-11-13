@@ -1,6 +1,6 @@
 import React, { useEffect, useContext } from "react";
 import { usePlaidLink } from "react-plaid-link";
-import PlaidButton from "plaid-threads/Button";
+import { Button as PlaidButton } from "plaid-threads"
 
 import Context from "../context";
 

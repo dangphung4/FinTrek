@@ -1,10 +1,8 @@
 import React, { useContext } from "react";
-import Callout from "plaid-threads/Callout";
-import PlaidButton from "plaid-threads/Button";
-import InlineLink from "plaid-threads/InlineLink";
 import styles from "../styles/index.module.scss";
 import PlaidLink from "../components/PlaidLink"
 import Context from "../context";
+import { Callout, Button as PlaidButton, InlineLink } from "plaid-threads";
 
 
 const PlaidLinkPage = () => {

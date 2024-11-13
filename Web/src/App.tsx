@@ -9,7 +9,6 @@ import RoutesWrapper from './components/RoutesWrapper'; // Import the new compon
 import Context from "./context";
 
 function App() {
-  /* const location = useLocation(); */
   const [isAuthPath,setIsAuthPath] = useState(false)
 
   // Effect to check the current path and update isAuthPath accordingly
@@ -22,28 +21,31 @@ function App() {
     useContext(Context);
 
   const getInfo = useCallback(async () => {
-    console.log('initiated get info')
-    const response = await fetch("http://localhost:8080/api/info", { method: "POST" });
-    if (!response.ok) {
-      console.log('get info response failed')
-      dispatch({ type: "SET_STATE", state: { backend: false } });
-      return { paymentInitiation: false }; // No need for paymentInitiation
-    }
-    const data = await response.json();
-    console.log('get info call successful')
+    try{
+      const response = await fetch("http://localhost:8080/api/info", { method: "POST" });
+      if (!response.ok) {
+        console.log('get info response failed')
+        dispatch({ type: "SET_STATE", state: { backend: false } });
+        return { isUserTokenFlow: false };
+      }
+      const data = await response.json();
+      
+      // Focus on transaction and balance products (no payment initiation)
+      const isUserTokenFlow = data.products.some((product) => product === "transactions" || product === "balance");
     
-    // Focus on transaction and balance products (no payment initiation)
-    const isUserTokenFlow = data.products.some((product) => product === "transactions" || product === "balance");
-  
-    dispatch({
-      type: "SET_STATE",
-      state: {
-        products: data.products,
-        isUserTokenFlow: isUserTokenFlow, // Updated state
-      },
-    });
-    console.log(isUserTokenFlow)
-    return { isUserTokenFlow }; // Only return what's necessary
+      dispatch({
+        type: "SET_STATE",
+        state: {
+          products: data.products,
+          isUserTokenFlow: isUserTokenFlow, // Updated state
+        },
+      });
+      return { isUserTokenFlow }; // Only return what's necessary
+    } catch (error) {
+      console.error('Network error: ', error);
+      dispatch({ type: "SET_STATE", state: { backend: false } });
+      return { isUserTokenFlow: false };
+    }
   }, [dispatch]);
     
 
@@ -86,9 +88,9 @@ function App() {
         return;
       }
       dispatch({ type: "SET_STATE", state: { linkToken: data.link_token } });
+      // Store the link_token
+      localStorage.setItem("link_token", data.link_token);
     }
-    // Store the link_token
-    localStorage.setItem("link_token", data.link_token);
   }, [dispatch]);
   
 

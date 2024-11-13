@@ -1,7 +1,7 @@
-const whitelist = [
-    'http://localhost:8080',
-    'http://localhost:5173'
-];
+
+const whitelist = process.env.NODE_ENV === 'production'
+    ? [process.env.FRONTEND_URL]
+    : ['http://localhost:8080','http://localhost:5173'];
 
 const corsOptions = {
     origin: (origin,callback) => {
@@ -11,7 +11,11 @@ const corsOptions = {
             callback(new Error('Invalid CORS origin request'))
         }
     },
-    optionsSuccessStatus: 200
+    optionsSuccessStatus: 200,
+    credentials: true, // Enable credentials (cookies, authorization headers)
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Explicitly list allowed methods
+    allowedHeaders: ['Content-Type', 'Authorization'], // Explicitly list allowed headers
+    maxAge: 86400 // Cache preflight requests for 24 hours
 };
 
 module.exports = corsOptions;
