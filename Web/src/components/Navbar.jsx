@@ -77,6 +77,7 @@ function Navbar() {
               <MenuItem>Profile</MenuItem>
               <MenuItem>Settings</MenuItem>
               <MenuItem>Billing</MenuItem>
+              <Link to='/link-plaid'><MenuItem>Link Plaid</MenuItem></Link>
               <MenuItem onClick={handleLogout}>Sign out</MenuItem>
             </MenuList>
           </Menu>
