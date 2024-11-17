@@ -1,4 +1,4 @@
-// src/App.jsx
+// src/App.tsx
 import React, {useEffect, useState, useCallback, useContext} from 'react';
 import { ChakraProvider, Box, Flex } from '@chakra-ui/react';
 import { BrowserRouter as Router, useLocation } from 'react-router-dom';
