@@ -1,4 +1,4 @@
-// src/App.jsx
+// src/App.tsx
 import React, {useEffect, useState, useCallback, useContext} from 'react';
 import { ChakraProvider, Box, Flex } from '@chakra-ui/react';
 import { BrowserRouter as Router, useLocation } from 'react-router-dom';
@@ -33,7 +33,7 @@ function App() {
     console.log('get info call successful')
     
     // Focus on transaction and balance products (no payment initiation)
-    const isUserTokenFlow = data.products.some((product) => product === "transactions" || product === "balance");
+    const isUserTokenFlow = data.products.some((product: string) => product === "transactions" || product === "balance");
   
     dispatch({
       type: "SET_STATE",
@@ -47,7 +47,7 @@ function App() {
   }, [dispatch]);
     
 
-  const generateUserToken = useCallback(async (userID) => {
+  const generateUserToken = useCallback(async (userID: string) => {
     const response = await fetch("http://localhost:8080/api/create_user_token", { 
       method: "POST",
       headers: {
@@ -76,7 +76,7 @@ function App() {
     }
   }, [dispatch]);
 
-  const generateToken = useCallback(async (userID) => {
+  const generateToken = useCallback(async (userID: string) => {
     const response = await fetch("http://localhost:8080/api/create_link_token", { 
       method: "POST",
       headers: {
@@ -121,7 +121,7 @@ function App() {
         return;
       }
       const { data: { user } } = await supabase.auth.getUser()
-      const userID = user?.id;
+      const userID = user?.id || '';
       if (isUserTokenFlow) {
         await generateUserToken(userID);
       }
