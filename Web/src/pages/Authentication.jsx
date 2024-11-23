@@ -44,12 +44,13 @@ function Authentication() {
         duration: 5000,
         isClosable: true,
       });
-      navigate("/");
     }
  
     
     if (data.session) {
-      localStorage.setItem('userToken', data.session.access_token);
+      localStorage.setItem('sb_access_token', data.session.access_token);
+      supabase.auth.setSession(data.session);
+
       navigate('/'); // Redirect to dashboard on successful login
     }
 

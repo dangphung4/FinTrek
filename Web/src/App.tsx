@@ -48,12 +48,19 @@ function App() {
     
 
   const generateUserToken = useCallback(async (userID: string) => {
+    const sbAccessToken = localStorage.getItem('sb_access_token'); // Retrieve the token
+
+    if (!sbAccessToken) {
+        console.error('Access token not found.');
+        return;
+    }
+
     const response = await fetch("http://localhost:8080/api/create_user_token", { 
       method: "POST",
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({ userID })
+      body: JSON.stringify({ userID, sbAccessToken })
     });
     if (!response.ok) {
       dispatch({ type: "SET_STATE", state: { userToken: null } });
@@ -127,6 +134,9 @@ function App() {
       }
       generateToken(userID);
     };
+
+    
+
     init();
   }, [dispatch, generateToken, generateUserToken, getInfo, isAuthPath]);
 

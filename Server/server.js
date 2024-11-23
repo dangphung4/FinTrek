@@ -19,6 +19,9 @@ app.use(bodyParser.json());
 const rootRouter = require('./routes/root');
 app.use('/', rootRouter);
 
+const supabaseRouter = require('./routes/api/setSupabaseSession');
+app.use('/api/set_supabase_session', supabaseRouter)
+
 const apiCreateLinkTokenRouter = require('./routes/api/createLinkToken');
 app.use('/api/create_link_token', apiCreateLinkTokenRouter);
 
