@@ -9,6 +9,7 @@ import Authentication from '../pages/Authentication';
 import SignUp from '../pages/SignUp';
 import ForgotPassword from '../pages/ForgotPassword';
 import ResetPassword from '../pages/ResetPassword';
+import PlaidLinkPage from '../pages/PlaidLinkPage'
 
 function RoutesWrapper({ setIsAuthPath }) {
   const [loading, setLoading] = useState(true);
@@ -72,6 +73,7 @@ function RoutesWrapper({ setIsAuthPath }) {
       <Route path="/login" element={<Authentication />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/reset-password" element={<ResetPassword />} />
+      <Route path="/link-plaid" element={<PlaidLinkPage />} />
     </Routes>
   );
 }
