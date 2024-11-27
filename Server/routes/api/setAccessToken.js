@@ -20,7 +20,7 @@ router.post('/', function (req, res, next) {
 
         const supabase = getSupabaseClientWithAuth(sbAccessToken);
 
-        // Step 1: Check if a user token already exists in the database
+        // Step 1: Check if an access token and item id already exists in the database
         const { data: existingUser, error: selectError } = await supabase
         .from('plaidStuff')
         .select('access_token, item_id')
@@ -32,7 +32,7 @@ router.post('/', function (req, res, next) {
         if (selectError) {
           if (selectError.code === 'PGRST301') {
             // If the JWT is expired, log the issue and proceed to create a new token
-            console.warn('JWT expired. Proceeding to create a new access token and item id.');
+            console.warn('JWT expired. Proceeding to create a new access token.');
           } else if (selectError.code !== 'PGRST116') {
             // Handle other Supabase query errors
             console.error('Error checking for existing access token and item id:', selectError);

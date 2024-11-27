@@ -19,9 +19,6 @@ app.use(bodyParser.json());
 const rootRouter = require('./routes/root');
 app.use('/', rootRouter);
 
-const supabaseRouter = require('./routes/api/setSupabaseSession');
-app.use('/api/set_supabase_session', supabaseRouter)
-
 const apiCreateLinkTokenRouter = require('./routes/api/createLinkToken');
 app.use('/api/create_link_token', apiCreateLinkTokenRouter);
 
@@ -33,6 +30,9 @@ app.use('/api/create_user_token', apiCreateUserToken);
 
 const apiInfo = require('./routes/api/info');
 app.use('/api/info', apiInfo);
+
+const apiGetExpensesRouter = require('./routes/api/getExpenses');
+app.use('/api/get_expenses', apiGetExpensesRouter);
 
 // Global error handler
 app.use((err, req, res, next) => {

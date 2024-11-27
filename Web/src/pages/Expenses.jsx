@@ -1,12 +1,13 @@
 // src/pages/Expenses.jsx
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import { Box, Table, Thead, Tbody, Tr, Th, Td, useColorModeValue, Button, Flex, Icon, Text, SimpleGrid, Stack, HStack, Grid } from '@chakra-ui/react';
 import { faker } from '@faker-js/faker';
 import { FaPlus, FaFilter, FaDownload } from 'react-icons/fa';
 import PageHeader from '../components/PageHeader';
 import DashboardCard from '../components/DashboardCard';
+import supabase from '../supabaseClient';
 
-const expenses = Array.from({ length: 10 }, () => ({
+const fakeExpenses = Array.from({ length: 10 }, () => ({
   id: faker.string.uuid(),
   date: faker.date.recent().toLocaleDateString(),
   description: faker.commerce.productName(),
@@ -14,7 +15,59 @@ const expenses = Array.from({ length: 10 }, () => ({
   amount: faker.number.int({ min: 10, max: 500 }),
 }));
 
+const sbAccessToken = localStorage.getItem('sb_access_token');
+const { data: { user } } = await supabase.auth.getUser()
+const userID = user?.id || '';
+
 function Expenses() {
+  const [expenses, setExpenses] = useState([]);
+  const [limit, setLimit] = useState(10);
+  useEffect(() =>{
+    const getExpensesCall = async () => {
+      const response = await fetch("http://localhost:8080/api/get_expenses",{
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ userID, sbAccessToken, limit }),
+      })
+      if (!response.ok) {
+        console.log("response failed fetching at get expenses endpoint")
+        return;
+      }
+      const data = await response.json();
+
+      const accountMap = data.accounts.reduce((acc, account) => {
+        acc[account.account_id] = account.name;
+        return acc;
+      }, {});
+
+      function isValidJson(obj) {
+        try {
+          JSON.parse(obj);
+          return true;
+        } catch (e) {
+          return false;
+        }
+      }
+
+      const categoryParse = (category) => isValidJson(category) ? JSON.parse(category)[0] : category[0];
+      
+
+      const transformedExpenses = data.latest_transactions.map((transaction) => ({
+        id: transaction.transaction_id,
+        description: transaction.merchant_name ? transaction.merchant_name : transaction.name,
+        amount: `${transaction.amount.toFixed(2)} ${transaction.iso_currency_code}`,
+        date: transaction.date,
+        category: categoryParse(transaction.category), // Include the category from the data
+        account: accountMap[transaction.account_id],
+      }));
+  
+      setExpenses(transformedExpenses);
+    }
+    getExpensesCall();
+  },[]);
+
   const bgColor = useColorModeValue('white', 'gray.700');
 
   return (
@@ -54,6 +107,7 @@ function Expenses() {
         <Table variant="simple" size = {{base: 'sm',sm: 'md'}}>
           <Thead>
             <Tr>
+              <Th>Account</Th>
               <Th>Date</Th>
               <Th>Description</Th>
               <Th>Category</Th>
@@ -63,6 +117,7 @@ function Expenses() {
           <Tbody>
             {expenses.map((expense) => (
               <Tr key={expense.id}>
+                <Td>{expense.account}</Td>
                 <Td>{expense.date}</Td>
                 <Td>{expense.description}</Td>
                 <Td>{expense.category}</Td>
@@ -89,6 +144,10 @@ function Expenses() {
           {expenses.map((expense) => (
             <Box key={expense.id} p={1} borderRadius="sm" borderWidth="3px" boxShadow="sm" bg={bgColor}>
               <Stack spacing={2}>
+                <HStack justify="space-between">
+                  <Text fontSize="sm" fontWeight="bold">Account:</Text>
+                  <Text fontSize="sm">{expense.account}</Text>
+                </HStack>
                 <HStack justify="space-between">
                   <Text fontSize="sm" fontWeight="bold">Date:</Text>
                   <Text fontSize="sm">{expense.date}</Text>

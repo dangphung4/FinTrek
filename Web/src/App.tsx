@@ -134,9 +134,6 @@ function App() {
       }
       generateToken(userID);
     };
-
-    
-
     init();
   }, [dispatch, generateToken, generateUserToken, getInfo, isAuthPath]);
 

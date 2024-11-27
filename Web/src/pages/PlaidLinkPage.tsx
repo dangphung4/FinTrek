@@ -8,7 +8,7 @@ import Context from "../context";
 
 
 const PlaidLinkPage = () => {
-  const {
+  let {
     itemId,
     accessToken,
     userToken,
@@ -19,6 +19,11 @@ const PlaidLinkPage = () => {
     linkTokenError,
     isPaymentInitiation,
   } = useContext(Context);
+
+  /* linkToken = localStorage.getItem("link_token");
+  if (linkToken){
+    linkSuccess = true;
+  } */
 
   return (
     <div className={styles.grid}>
