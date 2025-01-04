@@ -154,10 +154,12 @@ function Expenses() {
       (!amountFilter.max || parseFloat(expense.amount) <= parseFloat(amountFilter.max));
 
     // Date filter
-    const expenseDate = new Date(expense.date);
+    const expenseDate = new Date(expense.date); // Create a Date object
+    //expenseDate.setDate(expenseDate.getDate() - 1); // Subtract one day
+
 
     const meetDateCriteria = 
-      (!dateFilter[0] || expenseDate >= dateFilter[0]) &&
+      (!dateFilter[0] || expenseDate >= new Date(new Date(dateFilter[0]).setDate(new Date(dateFilter[0]).getDate() - 1))) &&
       (!dateFilter[1] || expenseDate <= dateFilter[1]);
 
     // Account filter
