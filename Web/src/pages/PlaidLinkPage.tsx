@@ -8,16 +8,18 @@ import Context from "../context";
 
 
 const PlaidLinkPage = () => {
-  let {
-    itemId,
-    accessToken,
-    userToken,
-    linkToken,
-    linkSuccess,
-    isItemAccess,
-    backend,
-    linkTokenError,
-    isPaymentInitiation,
+  const {
+    state: {
+      itemId,
+      accessToken,
+      userToken,
+      linkToken,
+      linkSuccess,
+      isItemAccess,
+      backend,
+      linkTokenError,
+      isPaymentInitiation,
+    },
   } = useContext(Context);
 
   /* linkToken = localStorage.getItem("link_token");

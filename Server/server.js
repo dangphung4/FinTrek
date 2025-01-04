@@ -34,6 +34,18 @@ app.use('/api/info', apiInfo);
 const apiGetExpensesRouter = require('./routes/api/getExpenses');
 app.use('/api/get_expenses', apiGetExpensesRouter);
 
+const apiGetTxnStatsRouter = require('./routes/api/getTxnStats');
+app.use('/api/get_txn_stats', apiGetTxnStatsRouter);
+
+const apiAddExpenseRouter = require('./routes/api/addExpense');
+app.use('/api/add_expense', apiAddExpenseRouter);
+
+const apiDeleteExpenseRouter = require('./routes/api/deleteExpense');
+app.use('/api/delete_expense', apiDeleteExpenseRouter);
+
+const apiCreateBankAccountRouter = require('./routes/api/createBankAccount');
+app.use('/api/create_bank_account', apiCreateBankAccountRouter);
+
 // Global error handler
 app.use((err, req, res, next) => {
   console.error(err.stack);

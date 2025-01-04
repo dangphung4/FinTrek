@@ -1,8 +1,12 @@
 // src/App.tsx
 import React, {useEffect, useState, useCallback, useContext} from 'react';
 import { ChakraProvider, Box, Flex } from '@chakra-ui/react';
+import { ThemeProvider as MUIThemeProvider } from '@mui/material/styles';
+import { CssBaseline } from '@mui/material';
 import { BrowserRouter as Router, useLocation } from 'react-router-dom';
 import theme from './theme';
+import muiTheme from './muiTheme';
+import { useThemeContext } from './context/themeContext'; 
 import Navbar from './components/Navbar';
 import Sidebar from './components/Sidebar';
 import RoutesWrapper from './components/RoutesWrapper'; // Import the new component
@@ -10,7 +14,10 @@ import Context from "./context";
 import supabase from './supabaseClient';
 
 function App() {
-  /* const location = useLocation(); */
+  //using context to get themeMode to use proper mui theme
+  const { themeMode } = useThemeContext();
+  const muiThemeModed = muiTheme(themeMode);
+
   const [isAuthPath,setIsAuthPath] = useState(false)
 
   // Effect to check the current path and update isAuthPath accordingly
@@ -19,7 +26,22 @@ function App() {
     setIsAuthPath(authPaths.includes(location.pathname));
   }, [location.pathname]);
 
-  const { itemId, dispatch } = useContext(Context);
+  const ensureValidSession = async () => {
+    const session = await supabase.auth.getSession();
+    const tokenExpiresAt = session?.data?.session?.expires_at;
+    const currentTime = Math.floor(Date.now() / 1000); // Current time in seconds
+  
+    // Refresh only if the token is close to expiry (e.g., less than 5 minutes remaining)
+    if (tokenExpiresAt && tokenExpiresAt - currentTime < 300) {
+      const { error } = await supabase.auth.refreshSession();
+      if (error) {
+        console.error('Session refresh failed:', error);
+        throw new Error('Session refresh failed');
+      }
+    }
+  };
+
+  const { dispatch } = useContext(Context);
 
   const getInfo = useCallback(async () => {
     console.log('initiated get info')
@@ -33,8 +55,8 @@ function App() {
     console.log('get info call successful')
     
     // Focus on transaction and balance products (no payment initiation)
-    const isUserTokenFlow = data.products.some((product: string) => product === "transactions" || product === "balance");
-  
+    //const isUserTokenFlow = data.products.some((product: string) => product === "transactions" || product === "balance");
+    const isUserTokenFlow = true;
     dispatch({
       type: "SET_STATE",
       state: {
@@ -54,7 +76,7 @@ function App() {
         console.error('Access token not found.');
         return;
     }
-
+    console.log("calling create user token endpoint")
     const response = await fetch("http://localhost:8080/api/create_user_token", { 
       method: "POST",
       headers: {
@@ -63,6 +85,7 @@ function App() {
       body: JSON.stringify({ userID, sbAccessToken })
     });
     if (!response.ok) {
+      console.log("failed to create user token");
       dispatch({ type: "SET_STATE", state: { userToken: null } });
       return;
     }
@@ -115,6 +138,7 @@ function App() {
     if (isAuthPath){ return; }
 
     const init = async () => {
+      await ensureValidSession();
       const { isUserTokenFlow } = await getInfo(); // used to determine which path to take when generating token
       // do not generate a new token for OAuth redirect; instead
       // setLinkToken from localStorage
@@ -129,50 +153,53 @@ function App() {
       }
       const { data: { user } } = await supabase.auth.getUser()
       const userID = user?.id || '';
-      if (isUserTokenFlow) {
-        await generateUserToken(userID);
-      }
+      console.log('useID: ', userID)
+      await generateUserToken(userID);
       generateToken(userID);
     };
     init();
   }, [dispatch, generateToken, generateUserToken, getInfo, isAuthPath]);
 
   return (
-    <ChakraProvider theme={theme}>
-      <Router>
-        {isAuthPath ? (
-            <Box minH="100vh" display="flex" alignItems="center" justifyContent="center">
-              <Flex>
-                <Box
+    <MUIThemeProvider theme={muiThemeModed}>
+      {/* Ensures Material UI components reset default browser styles */}
+      <CssBaseline />
+      <ChakraProvider theme={theme}>
+        <Router>
+          {isAuthPath ? (
+              <Box minH="100vh" display="flex" alignItems="center" justifyContent="center">
+                <Flex>
+                  <Box
+                      flex="1"
+                      p={8}
+                      overflowY="auto"
+                    >
+                      <RoutesWrapper setIsAuthPath={setIsAuthPath}/> {/* Use the new components */}
+                    </Box>
+                </Flex>
+              </Box>
+            ) : (
+              <Box minH="100vh">
+                <Navbar />
+                <Flex>
+                  <Sidebar />
+                  <Box
                     flex="1"
-                    p={8}
+                    ml={{ base: 0, md: '240px' }}
+                    mt="60px"
+                    p={{base:2,megasmall:4,xxs:8}}
+                    minH="calc(100vh - 60px)"
                     overflowY="auto"
+                    width="calc(100% - 240px)"
                   >
                     <RoutesWrapper setIsAuthPath={setIsAuthPath}/> {/* Use the new components */}
                   </Box>
-              </Flex>
-            </Box>
-          ) : (
-            <Box minH="100vh">
-              <Navbar />
-              <Flex>
-                <Sidebar />
-                <Box
-                  flex="1"
-                  ml={{ base: 0, md: '240px' }}
-                  mt="60px"
-                  p={{base:2,megasmall:4,xxs:8}}
-                  minH="calc(100vh - 60px)"
-                  overflowY="auto"
-                  width="calc(100% - 240px)"
-                >
-                  <RoutesWrapper setIsAuthPath={setIsAuthPath}/> {/* Use the new components */}
-                </Box>
-              </Flex>
-            </Box>
-          )}
-      </Router>
-    </ChakraProvider>
+                </Flex>
+              </Box>
+            )}
+        </Router>
+      </ChakraProvider>
+    </MUIThemeProvider>
   );
 }
 

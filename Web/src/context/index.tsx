@@ -18,6 +18,7 @@ interface QuickstartState {
     error_code: string;
     error_type: string;
   };
+  institutionsLinked: string[];
 }
 
 const initialState: QuickstartState = {
@@ -38,6 +39,8 @@ const initialState: QuickstartState = {
     error_code: "",
     error_message: "",
   },
+  institutionsLinked: [],
+  
 };
 
 type QuickstartAction = {
@@ -45,13 +48,16 @@ type QuickstartAction = {
   state: Partial<QuickstartState>;
 };
 
-interface QuickstartContext extends QuickstartState {
-  dispatch: Dispatch<QuickstartAction>;
+interface QuickstartContext {
+  state: QuickstartState; // Explicitly include the state
+  dispatch: Dispatch<QuickstartAction>; // Include dispatch function
 }
 
-const Context = createContext<QuickstartContext>(
-  initialState as QuickstartContext
-);
+
+const Context = createContext<QuickstartContext>({
+  state: initialState, // Initial state value
+  dispatch: () => undefined, // Placeholder function for dispatch
+});
 
 const { Provider } = Context;
 export const QuickstartProvider: React.FC<{ children: ReactNode }> = (
@@ -69,7 +75,7 @@ export const QuickstartProvider: React.FC<{ children: ReactNode }> = (
     }
   };
   const [state, dispatch] = useReducer(reducer, initialState);
-  return <Provider value={{ ...state, dispatch }}>{props.children}</Provider>;
+  return <Provider value={{ state, dispatch }}>{props.children}</Provider>;
 };
 
 export default Context;
