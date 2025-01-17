@@ -67,12 +67,18 @@ router.post('/', function (req, response, next) {
           if (upsertError) {
               // Handle Supabase upsert errors
               console.error('Error upserting user token into database:', upsertError);
-              return response.status(500).json({ message: 'Database error while upserting user token.' });
+              return response.status(500).json({ 
+                message: 'Database error while upserting user token.',
+                details: upsertError
+              });
           }
           response.json(user.data);
         }catch (error){
           console.log("Error trying to create user: ", error);
-          return response.status(500).json({ message: 'Database error while upserting user token.' });
+          return response.status(500).json({ 
+            message: 'Database error while upserting user token.',
+            details: error
+          });
         }
       }).catch(next);
   });

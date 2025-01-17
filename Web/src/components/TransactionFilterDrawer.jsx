@@ -72,15 +72,26 @@ export default function TransactionFilterDrawer({
                         <MUITextField 
                             label="Min Amount" 
                             type="number"
+                            inputProps={{ step: "0.01" }}
                             value={amountFilter.min}
-                            onChange={(e) => setAmountFilter(prev => ({ ...prev, min: e.target.value }))}
+                            onChange={(e) => {
+                                const value = parseFloat(e.target.value);
+                                if (!isNaN(value)) { 
+                                    setAmountFilter(prev => ({ ...prev, min: value })); 
+                                }
+                            }}
                             fullWidth
                         />
                         <MUITextField 
                             label="Max Amount" 
                             type="number"
                             value={amountFilter.max}
-                            onChange={(e) => setAmountFilter(prev => ({ ...prev, max: e.target.value }))}
+                            onChange={(e) => {
+                                const value = parseFloat(e.target.value);
+                                if (!isNaN(value)) { 
+                                    setAmountFilter(prev => ({ ...prev, max: value })); 
+                                }
+                            }}
                             fullWidth
                         />
                     </MUIBox>

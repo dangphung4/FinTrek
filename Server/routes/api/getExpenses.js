@@ -31,7 +31,7 @@ router.post('/', function (req,response,next){
             .not('access_token', 'is', null)
 
             if (selectError){
-                if (selectError.code === 'PGRST301') {
+                if (selectError.code === 'PGRST301') {  // PGRST301: Supabase error code indicating an expired JWT token. Confirmed as part of current database API documentation
                     //check if existingUser is null because if it is that means this is the user going to the expenses page without ever linking an account with plaid
                     //keep in mind that the logic will prob have to change later on because there is a chance they just dont want to link plaid and have already added transactions manually...
                     //... in which case I would probably want to just make sure it doesn't return during all this logic dealing with access tokens so that it goes to search for transactions

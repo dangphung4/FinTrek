@@ -61,7 +61,7 @@ function Expenses() {
 
   const formatDateToMMDDYYYY = (inputDate) => {
     const date = new Date(inputDate);
-    if (isNaN(date)) {
+    if (Number.isNaN(date.getTime())) {
       console.error(`Invalid date provided: ${inputDate}`);
       return inputDate; // Return the original date if it's invalid
     }
@@ -93,7 +93,7 @@ function Expenses() {
       const sbAccessToken = localStorage.getItem('sb_access_token');
       const { data: { user } } = await supabase.auth.getUser()
       const userID = user?.id || '';
-      const response = await fetch("http://localhost:8080/api/get_expenses",{
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/get_expenses`,{
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -232,7 +232,7 @@ function Expenses() {
           const sbAccessToken = localStorage.getItem('sb_access_token');
           const { data: { user } } = await supabase.auth.getUser()
           const userID = user?.id || '';
-          const response = await fetch('http://localhost:8080/api/get_txn_stats', {
+          const response = await fetch(`${import.meta.env.VITE_API_URL}/get_txn_stats`, {
               method: 'POST',
               headers: {
                   'Content-Type': 'application/json',
@@ -266,7 +266,7 @@ function Expenses() {
     const sbAccessToken = localStorage.getItem('sb_access_token');
     const { data: { user } } = await supabase.auth.getUser()
     const userID = user?.id || '';
-    const response = await fetch("http://localhost:8080/api/add_expense",{
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/add_expense`,{
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -286,7 +286,7 @@ function Expenses() {
     const sbAccessToken = localStorage.getItem('sb_access_token');
     const { data: { user } } = await supabase.auth.getUser()
     const userID = user?.id || '';
-    const response = await fetch("http://localhost:8080/api/delete_expense",{
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/delete_expense`,{
       method: "POST",
       headers: {
         "Content-Type": "application/json"

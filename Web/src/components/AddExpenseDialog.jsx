@@ -67,8 +67,14 @@ export default function AddExpenseDialog({
 
     const handleSubmit = () => {
         // Validate form data
-        if ((!formData.isCash && (!formData.date || !formData.description || !formData.category || !formData.account || !formData.amount)) || (formData.isCash && (!formData.date || !formData.description || !formData.category || !formData.amount))) {
-            alert('Please fill in all fields');
+        const requiredFields = formData.isCash
+            ? ['date', 'description', 'category', 'amount']
+            : ['date', 'description', 'category', 'account', 'amount'];
+
+        const missingFields = requiredFields.filter(field => !formData[field]);
+        
+        if (missingFields.length > 0) {
+            alert(`Please fill in the following fields: ${missingFields.join(', ')}`);
             return;
         }
 

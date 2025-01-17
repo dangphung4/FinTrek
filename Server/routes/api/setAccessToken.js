@@ -23,14 +23,14 @@ router.post('/', function (req, res, next) {
 
         // Step 1: Check if an access token and item id already exists in the database
         const { data: existingUser, error: selectError } = await supabase
-        .from('plaidStuff')
-        .select('access_token, item_id')
-        .eq('id', userID)
-        .eq('institution_id', institution_id)
-        .not('access_token', 'is', null) // Ensure access_token is not null
-        .not('item_id', 'is', null) // Ensure item_id is not null
-        .not('institution_id', 'is', null) // Ensure item_id is not null
-        .single(); // Expecting a single match
+            .from('plaidStuff')
+            .select('access_token, item_id')
+            .eq('id', userID)
+            .eq('institution_id', institution_id)
+            .not('access_token', 'is', null) // Ensure access_token is not null
+            .not('item_id', 'is', null) // Ensure item_id is not null
+            .not('institution_id', 'is', null) // Ensure item_id is not null
+            .single(); // Expecting a single match
 
         if (selectError && selectError.code !== 'PGRST116') { // Ignore "not found" errors
           console.error('Error querying existing institution:', selectError);
@@ -49,16 +49,16 @@ router.post('/', function (req, res, next) {
         //get user token to insert for new access tokens created as well
         let user_token = null;
         const {  data: userTokenData, error: selectUserTokenError } = await supabase
-        .from('plaidStuff')
-        .select('user_token')
-        .eq('id',userID)
+            .from('plaidStuff')
+            .select('user_token')
+            .eq('id',userID)
 
         if (selectUserTokenError){
           console.log('error getting user token associated with user id: ', selectUserTokenError)
           return res.status(500).json({ message: "Error getting user token associated with user id" })
         }
 
-        if(userTokenData){
+        if(userTokenData && userTokenData.length > 0){
           console.log('user token found: ', userTokenData[0].user_token )
           user_token = userTokenData[0].user_token;
         }
@@ -71,10 +71,10 @@ router.post('/', function (req, res, next) {
 
         // Check if there are rows with the given id and a non-null access_token
         const { data: existingRows, error: selectIDError } = await supabase
-        .from('plaidStuff')
-        .select('id') // Only select the necessary column(s)
-        .eq('id', userID)
-        .not('access_token', 'is', null);
+            .from('plaidStuff')
+            .select('id') // Only select the necessary column(s)
+            .eq('id', userID)
+            .not('access_token', 'is', null);
 
         if (selectIDError) {
           console.error('Error checking for existing user to determine upsert or insert:', selectIDError);
@@ -82,7 +82,7 @@ router.post('/', function (req, res, next) {
         }
 
         if (existingRows && existingRows.length > 0) {
-          // If rows exist, insert a new row
+          // If rows exists with non null access_token, insert a new row
           const { error: insertError } = await supabase
               .from('plaidStuff')
               .insert({
@@ -101,7 +101,7 @@ router.post('/', function (req, res, next) {
           console.log('New access token, item id, institution id, and user token successfully added for user:', userID);
 
         } else {
-          // If no rows exist, update the existing row with new values
+          // If row exists but access_token is null, update the existing row with new values
           const { error: updateError } = await supabase
               .from('plaidStuff')
               .update({

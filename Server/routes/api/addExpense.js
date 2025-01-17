@@ -13,38 +13,14 @@ router.post('/', function (req,response,next){
             .from('transactions')
             .insert({
                 id: userID,
-                item_id: null,
                 transaction_id: uuidv4(),
                 account_id: expenseData.account,
                 amount: expenseData.amount,
                 date: expenseData.date,
-                authorized_date: null,
                 name: expenseData.description,
                 category: [expenseData.category],
-                category_id: null,
-                pending: null,
-                payment_channel: null,
-                merchant_name: null,
-                transaction_code: null,
-                location: null,
-                currency: null,
                 iso_currency_code: 'USD',
-                unofficial_currency_code: null,
-                created_at: null,
-                account_owner: null,
-                authorized_datetime: null,
-                check_number: null,
-                counterparties: null,
-                datetime: null,
-                logo_url: null,
-                merchant_entity_id: null,
-                payment_meta: null,
-                pending_transaction_id: null,
-                personal_finance_category: null,
-                personal_finance_category_icon_url: null,
-                transaction_type: null,
-                website: null,
-                plaid: false
+                plaid: false, // Example of a meaningful hardcoded value
             });
 
             if (insertTransactionError){
