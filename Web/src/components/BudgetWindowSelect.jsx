@@ -9,9 +9,9 @@ const BudgetWindowSelect = ({ onWindowChange }) => {
 
     useEffect(() => {
         // Update local storage with window and notify parent component on change so it knows the (potentially) new window
-        localStorage.setItem("budgetWindow", selectedWindow);
-        onWindowChange(selectedWindow);
-    }, [selectedWindow]); // function executes upon 
+        localStorage.setItem("budgetWindow", selectedWindow); // stored in local storage so user doesn't get annoyed having to redo this step everytime they log on
+        onWindowChange(selectedWindow); //window (week, month, or year) is passed back up to parent function (Budget page)
+    }, [selectedWindow]); // function executes upon mount and also selectedWindow variable change, which happens whenever an option is selected 
 
     return (
         <Select
