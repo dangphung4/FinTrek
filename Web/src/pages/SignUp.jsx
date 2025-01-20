@@ -26,37 +26,6 @@ function SignUp() {
     const handleSignUp = async () => {
         setLoading(true);
 
-        //Check if the email already exists in the profiles table
-        const { data: existingUser, error: queryError } = await supabase
-        .from("profiles")
-        .select("email")
-        .eq("email", email);
-
-        if (queryError) {
-          toast({
-            title: "Error",
-            description: "Error checking profiles table.",
-            status: "error",
-            duration: 5000,
-            isClosable: true,
-          });
-          setLoading(false);
-          return;
-        }
-
-        if (existingUser.length > 0) {
-          // Email already exists
-          toast({
-            title: "Account already exists",
-            description: "An account with this email already exists.",
-            status: "warning",
-            duration: 5000,
-            isClosable: true,
-          });
-          setLoading(false);
-          return;
-        }
-
         //sign up users
         const { data:signUpData, error:signUpError } = await supabase.auth.signUp({
         email,
@@ -85,21 +54,7 @@ function SignUp() {
             });
             setLoading(false);
             return;
-          }
-          const { data,error: profileError } = await supabase
-            .from("profiles")
-            .insert({ id: user.id, email: email,created_at: new Date(),name: name })
-            .select();
-          
-          if (profileError) {
-            toast({
-              title: "Error",
-              description: "Error inserting into profiles table." + profileError.message,
-              status: "error",
-              duration: 5000,
-              isClosable: true,
-            });
-          } else {
+          }else {
             toast({
               title: "Success",
               description: "Account created successfully.",
@@ -108,8 +63,7 @@ function SignUp() {
               isClosable: true,
             });
           }
-        }
-       
+        } 
         setLoading(false);
     };
     return (

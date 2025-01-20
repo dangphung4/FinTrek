@@ -39,13 +39,13 @@ const theme = extendTheme({
         },
       }),
     },
-    Heading: {
+    /* Heading: {
       baseStyle: (props) => ({
         _hover: {
           color: props.colorMode === 'dark' ? 'whiteAlpha.200' : 'blackAlpha.100',
         },
       }),
-    },
+    }, */
     Box: {
       baseStyle: (props) => ({
         _hover: {

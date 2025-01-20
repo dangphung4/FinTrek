@@ -13,18 +13,18 @@ router.post('/', function (req, response, next) {
         const { userID, sbAccessToken } = req.body; // Destructure `accessToken` from the request body
             
         if (!sbAccessToken) {
+            console.log('no access token provided to create user token, its required.')
             return response.status(400).json({ message: 'Access token is required.' });
         }
-
+        
         const supabase = getSupabaseClientWithAuth(sbAccessToken);
 
         // Step 1: Check if a user token already exists in the database
+        console.log('finding if user has existing user token')
         const { data: existingUser, error: selectError } = await supabase
         .from('plaidStuff')
         .select('user_token')
         .eq('id', userID)
-        .not('user_token', 'is', null)
-        .single(); // Expecting a single match
 
         if (selectError) {
           if (selectError.code === 'PGRST301') {
@@ -37,8 +37,9 @@ router.post('/', function (req, response, next) {
           }
         }
 
-        if (existingUser && selectError?.code !== 'PGRST301') {
+        if (existingUser && existingUser.length > 0 && selectError?.code !== 'PGRST301') {
           // Step 2: If a user token exists, return it
+          console.log('user token already exists: ', existingUser)
           return response.status(200).json({ message: 'User token already exists.', user_token: existingUser.user_token });
         }
 
@@ -47,27 +48,38 @@ router.post('/', function (req, response, next) {
           client_user_id: userID
         }
         
-        const user = await client.userCreate(request);
-        USER_TOKEN = user.data.user_token
+        try{
+          console.log('attempting to create user')
+          const user = await client.userCreate(request);
+          USER_TOKEN = user.data.user_token
+          // Step 4: Store the new user token in the database
+          console.log('attempting to upsert user token to user')
+          const { error: upsertError } = await supabase
+          .from('plaidStuff')
+          .upsert(
+              { 
+                  id: userID, 
+                  user_token: USER_TOKEN 
+              },
+              { onConflict: 'v4id' } // Use `id` to determine conflicts
+          );
 
-        // Step 4: Store the new user token in the database
-        const { error: upsertError } = await supabase
-        .from('plaidStuff')
-        .upsert(
-            { 
-                id: userID, 
-                user_token: USER_TOKEN 
-            },
-            { onConflict: 'id' } // Use `id` to determine conflicts
-        );
-
-        if (upsertError) {
-            // Handle Supabase upsert errors
-            console.error('Error upserting user token into database:', upsertError);
-            return response.status(500).json({ message: 'Database error while upserting user token.' });
+          if (upsertError) {
+              // Handle Supabase upsert errors
+              console.error('Error upserting user token into database:', upsertError);
+              return response.status(500).json({ 
+                message: 'Database error while upserting user token.',
+                details: upsertError
+              });
+          }
+          response.json(user.data);
+        }catch (error){
+          console.log("Error trying to create user: ", error);
+          return response.status(500).json({ 
+            message: 'Database error while upserting user token.',
+            details: error
+          });
         }
-
-        response.json(user.data);
       }).catch(next);
   });
 
