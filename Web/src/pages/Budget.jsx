@@ -90,13 +90,16 @@ function Budget() {
           })}
         </SimpleGrid>
       </Box>
-      <Modal isOpen={isEditModalOpen} onClose={handleCloseModal} size="full">
+      <Modal isOpen={isEditModalOpen} onClose={handleCloseModal} size="4xl">
           <ModalOverlay />
           <ModalContent>
               <ModalHeader>Edit Budget</ModalHeader>
               <ModalCloseButton />
               <ModalBody>
                   {/* I will add self-balancing sliders here for each category */}
+                  <Text>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quis maiores quasi numquam sequi asperiores illum enim distinctio eum consequatur repudiandae et, voluptates rerum possimus aliquid dolor perspiciatis pariatur ipsum iusto?</Text>
+                  <Text>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quis maiores quasi numquam sequi asperiores illum enim distinctio eum consequatur repudiandae et, voluptates rerum possimus aliquid dolor perspiciatis pariatur ipsum iusto?</Text>
+                  <Text>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quis maiores quasi numquam sequi asperiores illum enim distinctio eum consequatur repudiandae et, voluptates rerum possimus aliquid dolor perspiciatis pariatur ipsum iusto?</Text>
               </ModalBody>
               <ModalFooter>
                 <Button colorScheme="blue" mr={3} onClick={handleCloseModal}>
