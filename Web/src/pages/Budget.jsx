@@ -1,7 +1,7 @@
 
 // src/pages/Budget.jsx
 import React, {useState} from 'react';
-import { Box, SimpleGrid, Progress, Text, VStack, useColorModeValue, Button, Flex } from '@chakra-ui/react';
+import { Box, SimpleGrid, Progress, Text, VStack, useColorModeValue, Button, Flex, Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton } from '@chakra-ui/react';
 import { faker } from '@faker-js/faker';
 import { FaPlus, FaChartBar } from 'react-icons/fa';
 import PageHeader from '../components/PageHeader';
@@ -16,6 +16,20 @@ function Budget() {
   const textColor = useColorModeValue('gray.800', 'white');
 
   const [budgetWindow, setBudgetWindow] = useState('Year');
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+
+  const handleEditButtonClick = () => {
+      setIsEditModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+      setIsEditModalOpen(false);
+  };
+
+  const handleApplyChanges = () => {
+      //will add functionality to this later
+      //probably will involve 
+  };
 
   return (
     <Box width="100%">
@@ -50,7 +64,7 @@ function Budget() {
         <Flex justify="space-between" align="center" mb={4}>
           <Text fontSize="xl" fontWeight="bold">Budget Breakdown</Text>
           <Box>
-            <Button leftIcon={<FaRegEdit />} colorScheme="blue" width={{base:'43px', megasmall:'auto'}} mr={3}>Edit</Button>
+            <Button leftIcon={<FaRegEdit />} colorScheme="blue" width={{base:'43px', megasmall:'auto'}} mr={3} onClick={handleEditButtonClick}>Edit</Button>
             <Button leftIcon={<FaPlus />} colorScheme="blue" width={{base:'86px',megasmall:'auto'}} >Add Category</Button>
           </Box>
         </Flex>
@@ -76,6 +90,24 @@ function Budget() {
           })}
         </SimpleGrid>
       </Box>
+      <Modal isOpen={isEditModalOpen} onClose={handleCloseModal} size="full">
+          <ModalOverlay />
+          <ModalContent>
+              <ModalHeader>Edit Budget</ModalHeader>
+              <ModalCloseButton />
+              <ModalBody>
+                  {/* I will add self-balancing sliders here for each category */}
+              </ModalBody>
+              <ModalFooter>
+                <Button colorScheme="blue" mr={3} onClick={handleCloseModal}>
+                  Cancel
+                </Button>
+                <Button colorScheme="blue" onClick={handleApplyChanges}>
+                  Apply
+                </Button>
+              </ModalFooter>
+          </ModalContent>
+      </Modal>
     </Box>
   );
 }
