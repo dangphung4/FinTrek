@@ -8,6 +8,8 @@ import PageHeader from '../components/PageHeader';
 import DashboardCard from '../components/DashboardCard';
 import BudgetWindowSelect from '../components/BudgetWindowSelect';
 import { FaRegEdit } from "react-icons/fa";
+import ModalCategoryBudgetSlider from '../components/ModalCategoryBudgetSlider';
+import { useBudget } from '../context/budgetContext';
 
 const categories = ['Food', 'Transportation', 'Entertainment', 'Utilities', 'Shopping'];
 
@@ -18,12 +20,18 @@ function Budget() {
   const [budgetWindow, setBudgetWindow] = useState('Year');
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
+  const {setAllocatedBudget} = useBudget();
+
   const handleEditButtonClick = () => {
       setIsEditModalOpen(true);
+
   };
 
   const handleCloseModal = () => {
-      setIsEditModalOpen(false);
+      setIsEditModalOpen(false);  // close the modal (duh)
+      setAllocatedBudget(0); // make sure the allocated budget gets reset so upon trying to edit again it doesn't lock u at 0 for the sliders
+      // in the future will need to not set allocated budget to 0 but set it whatever it was before according to the database
+      // will also need a way of resetting each slider to their original values, probably with context and a new useEffect (within the slider component) with something from the context in the dependency array
   };
 
   const handleApplyChanges = () => {
@@ -90,16 +98,15 @@ function Budget() {
           })}
         </SimpleGrid>
       </Box>
-      <Modal isOpen={isEditModalOpen} onClose={handleCloseModal} size="4xl">
+      <Modal isOpen={isEditModalOpen} onClose={handleCloseModal} size="2xl" isCentered>
           <ModalOverlay />
           <ModalContent>
-              <ModalHeader>Edit Budget</ModalHeader>
+              <ModalHeader textAlign={"center"}>{`${budgetWindow}ly Budget`}</ModalHeader>
               <ModalCloseButton />
               <ModalBody>
                   {/* I will add self-balancing sliders here for each category */}
-                  <Text>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quis maiores quasi numquam sequi asperiores illum enim distinctio eum consequatur repudiandae et, voluptates rerum possimus aliquid dolor perspiciatis pariatur ipsum iusto?</Text>
-                  <Text>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quis maiores quasi numquam sequi asperiores illum enim distinctio eum consequatur repudiandae et, voluptates rerum possimus aliquid dolor perspiciatis pariatur ipsum iusto?</Text>
-                  <Text>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quis maiores quasi numquam sequi asperiores illum enim distinctio eum consequatur repudiandae et, voluptates rerum possimus aliquid dolor perspiciatis pariatur ipsum iusto?</Text>
+                  <ModalCategoryBudgetSlider  category='Eating Out' />
+                  <ModalCategoryBudgetSlider  category='Groceries' />
               </ModalBody>
               <ModalFooter>
                 <Button colorScheme="blue" mr={3} onClick={handleCloseModal}>

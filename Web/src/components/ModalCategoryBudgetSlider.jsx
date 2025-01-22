@@ -38,15 +38,16 @@ const ModalCategoryBudgetSlider = ({ category }) => {
 
     return (
         <Flex 
-        align="center" 
+        align="center"
+        justifySelf={"center"} 
         gap={8} 
         w="full" 
         maxW="xl" 
         p={4}
         >
-        <Box w="32" textAlign="left">
-            <Text fontWeight="medium">{category}</Text>
-        </Box>
+        <Flex w="32" align='center' >
+            <Text fontWeight="light" fontSize={14}>{category}</Text>
+        </Flex>
         
         <Box flex="1" position="relative">
             <Box
@@ -70,6 +71,7 @@ const ModalCategoryBudgetSlider = ({ category }) => {
             max={totalBudget}
             step={1}
             onChange={handleSliderChange}
+            mt={2}
             >
                 <SliderTrack>
                     <SliderFilledTrack />
