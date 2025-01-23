@@ -10,6 +10,7 @@ import BudgetWindowSelect from '../components/BudgetWindowSelect';
 import { FaRegEdit } from "react-icons/fa";
 import ModalCategoryBudgetSlider from '../components/ModalCategoryBudgetSlider';
 import { useBudget } from '../context/budgetContext';
+import EditTotalBudget from '../components/EditTotalBudget';
 
 const categories = ['Food', 'Transportation', 'Entertainment', 'Utilities', 'Shopping'];
 
@@ -20,7 +21,9 @@ function Budget() {
   const [budgetWindow, setBudgetWindow] = useState('Year');
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
-  const {setAllocatedBudget} = useBudget();
+  const {setAllocatedBudget, totalBudget} = useBudget();
+
+  const [potentialTotalBudget, setPotentialTotalBudget] = useState(totalBudget.toString());
 
   const handleEditButtonClick = () => {
       setIsEditModalOpen(true);
@@ -32,11 +35,23 @@ function Budget() {
       setAllocatedBudget(0); // make sure the allocated budget gets reset so upon trying to edit again it doesn't lock u at 0 for the sliders
       // in the future will need to not set allocated budget to 0 but set it whatever it was before according to the database
       // will also need a way of resetting each slider to their original values, probably with context and a new useEffect (within the slider component) with something from the context in the dependency array
+      setPotentialTotalBudget(totalBudget.toString());
   };
 
   const handleApplyChanges = () => {
       //will add functionality to this later
       //probably will involve 
+  };
+
+  const handleBudgetChange = (e) => {
+      const value = Math.floor(Number(e.target.value))
+
+      // Only update budget if value is a positive integer
+      if (/^\d*$/.test(value) && Number(value) > 0) {
+          setPotentialTotalBudget(e.target.value);
+      }else{
+          setPotentialTotalBudget('');
+      }
   };
 
   return (
@@ -104,6 +119,10 @@ function Budget() {
               <ModalHeader textAlign={"center"}>{`${budgetWindow}ly Budget`}</ModalHeader>
               <ModalCloseButton />
               <ModalBody>
+                  <EditTotalBudget 
+                      handleBudgetChange={handleBudgetChange}
+                      potentialTotalBudget={potentialTotalBudget}    
+                  />
                   {/* I will add self-balancing sliders here for each category */}
                   <ModalCategoryBudgetSlider  category='Eating Out' />
                   <ModalCategoryBudgetSlider  category='Groceries' />
