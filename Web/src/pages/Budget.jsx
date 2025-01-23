@@ -1,11 +1,12 @@
 
 // src/pages/Budget.jsx
-import React from 'react';
+import React, {useState} from 'react';
 import { Box, SimpleGrid, Progress, Text, VStack, useColorModeValue, Button, Flex } from '@chakra-ui/react';
 import { faker } from '@faker-js/faker';
 import { FaPlus, FaChartBar } from 'react-icons/fa';
 import PageHeader from '../components/PageHeader';
 import DashboardCard from '../components/DashboardCard';
+import BudgetWindowSelect from '../components/BudgetWindowSelect';
 
 const categories = ['Food', 'Transportation', 'Entertainment', 'Utilities', 'Shopping'];
 
@@ -13,9 +14,14 @@ function Budget() {
   const bgColor = useColorModeValue('white', 'gray.700');
   const textColor = useColorModeValue('gray.800', 'white');
 
+  const [budgetWindow, setBudgetWindow] = useState('Year');
+
   return (
     <Box width="100%">
       <PageHeader title="Budget" />
+      <BudgetWindowSelect 
+          onWindowChange = {setBudgetWindow}
+      />
       <SimpleGrid columns={{ base: 1, md: 3 }} spacing={6} mb={8}>
         <DashboardCard
           title="Total Budget"
