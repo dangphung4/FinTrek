@@ -11,6 +11,7 @@ import { FaRegEdit } from "react-icons/fa";
 import ModalCategoryBudgetSlider from '../components/ModalCategoryBudgetSlider';
 import { useBudget } from '../context/budgetContext';
 import EditTotalBudget from '../components/EditTotalBudget';
+import AddCategoryModal from '../components/AddCategoryModal';
 
 const categories = ['Food', 'Transportation', 'Entertainment', 'Utilities', 'Shopping'];
 
@@ -24,6 +25,9 @@ function Budget() {
   const {setAllocatedBudget, totalBudget} = useBudget();
 
   const [potentialTotalBudget, setPotentialTotalBudget] = useState(totalBudget.toString());
+
+  //variable necessary for holding open/closed state of the add category modal
+  const [isOpenAddCategoryModal, setisOpenAddCategoryModal] = useState(false);
 
   const handleEditButtonClick = () => {
       setIsEditModalOpen(true);
@@ -88,7 +92,7 @@ function Budget() {
           <Text fontSize="xl" fontWeight="bold">Budget Breakdown</Text>
           <Box>
             <Button leftIcon={<FaRegEdit />} colorScheme="blue" width={{base:'43px', megasmall:'auto'}} mr={3} onClick={handleEditButtonClick}>Edit</Button>
-            <Button leftIcon={<FaPlus />} colorScheme="blue" width={{base:'86px',megasmall:'auto'}} >Add Category</Button>
+            <Button leftIcon={<FaPlus />} colorScheme="blue" width={{base:'86px',megasmall:'auto'}} onClick={() => {setisOpenAddCategoryModal(true)}}>Add Category</Button>
           </Box>
         </Flex>
         <SimpleGrid columns={{ base: 1, md: 2 }} spacing={6}>
@@ -113,6 +117,7 @@ function Budget() {
           })}
         </SimpleGrid>
       </Box>
+      {/* modal for editing budgets (I will probably make this its own component down the line) */}
       <Modal isOpen={isEditModalOpen} onClose={handleCloseModal} size="2xl" isCentered>
           <ModalOverlay />
           <ModalContent>
@@ -137,6 +142,11 @@ function Budget() {
               </ModalFooter>
           </ModalContent>
       </Modal>
+
+      <AddCategoryModal 
+          isOpenAddCategoryModal={isOpenAddCategoryModal}
+          setisOpenAddCategoryModal={setisOpenAddCategoryModal}    
+      />
     </Box>
   );
 }
