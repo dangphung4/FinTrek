@@ -10,15 +10,29 @@ import {
     Button,
     Input,
     FormControl,
-    FormLabel
+    FormLabel,
 } from '@chakra-ui/react';
 
 const AddCategoryModal = ({ isOpenAddCategoryModal, setIsOpenAddCategoryModal }) => {
     const [categoryName, setCategoryName] = useState('');
+    const [error, setError] = useState('');
 
     const handleClose = () => {
         setIsOpenAddCategoryModal(false);
         setCategoryName(''); // Clear input when modal closes
+        setError('');
+    };
+
+    const handleInputChange = (e) => {
+        const value = e.target.value;
+        
+        // Only allow letters (A-Z, a-z) and spaces
+        if (/^[a-zA-Z\s]*$/.test(value)) {
+            setCategoryName(value);
+            setError('');
+        } else {
+            setError('Category name can only contain letters');
+        }
     };
 
     return (
@@ -33,7 +47,7 @@ const AddCategoryModal = ({ isOpenAddCategoryModal, setIsOpenAddCategoryModal })
                         <Input 
                         placeholder="Enter category (e.g., Food, Utilities)" 
                         value={categoryName}
-                        onChange={(e) => setCategoryName(e.target.value)}
+                        onChange={handleInputChange}
                         />
                     </FormControl>
                 </ModalBody>
