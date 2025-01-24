@@ -27,7 +27,7 @@ function Budget() {
   const [potentialTotalBudget, setPotentialTotalBudget] = useState(totalBudget.toString());
 
   //variable necessary for holding open/closed state of the add category modal
-  const [isOpenAddCategoryModal, setisOpenAddCategoryModal] = useState(false);
+  const [isOpenAddCategoryModal, setIsOpenAddCategoryModal] = useState(false);
 
   const handleEditButtonClick = () => {
       setIsEditModalOpen(true);
@@ -92,7 +92,7 @@ function Budget() {
           <Text fontSize="xl" fontWeight="bold">Budget Breakdown</Text>
           <Box>
             <Button leftIcon={<FaRegEdit />} colorScheme="blue" width={{base:'43px', megasmall:'auto'}} mr={3} onClick={handleEditButtonClick}>Edit</Button>
-            <Button leftIcon={<FaPlus />} colorScheme="blue" width={{base:'86px',megasmall:'auto'}} onClick={() => {setisOpenAddCategoryModal(true)}}>Add Category</Button>
+            <Button leftIcon={<FaPlus />} colorScheme="blue" width={{base:'86px',megasmall:'auto'}} onClick={() => {setIsOpenAddCategoryModal(true)}}>Add Category</Button>
           </Box>
         </Flex>
         <SimpleGrid columns={{ base: 1, md: 2 }} spacing={6}>
@@ -145,7 +145,7 @@ function Budget() {
 
       <AddCategoryModal 
           isOpenAddCategoryModal={isOpenAddCategoryModal}
-          setisOpenAddCategoryModal={setisOpenAddCategoryModal}    
+          setIsOpenAddCategoryModal={setIsOpenAddCategoryModal}    
       />
     </Box>
   );
