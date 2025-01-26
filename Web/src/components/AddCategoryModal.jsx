@@ -11,12 +11,14 @@ import {
     Input,
     FormControl,
     FormLabel,
+    useToast
 } from '@chakra-ui/react';
 import supabase from '../supabaseClient';
 
 const AddCategoryModal = ({ isOpenAddCategoryModal, setIsOpenAddCategoryModal }) => {
     const [categoryName, setCategoryName] = useState('');
     const [error, setError] = useState('');
+    const toast = useToast();
 
     const handleClose = () => {
         setIsOpenAddCategoryModal(false);
@@ -47,12 +49,28 @@ const AddCategoryModal = ({ isOpenAddCategoryModal, setIsOpenAddCategoryModal })
             },
             body: JSON.stringify({ category: categoryName, sbAccessToken, userID }),
         });
+        handleClose();
         if (!response.ok) {
-            console.log(`response failed fetching at get expenses endpoint. This error occured: ${await response.json().message}`);
+            const data = await response.json();
+            toast({
+                title: "Error Adding Category",
+                description: data.message || "Failed to add category",
+                status: "error",
+                duration: 3000,
+                isClosable: true,
+                position: "bottom"
+            });
             return;
         }
         const data = await response.json();
-        console.log(data.message);
+        toast({
+            title: "Category Added",
+            description: data.message,
+            status: "success",
+            duration: 3000,
+            isClosable: true,
+            position: "bottom"
+        });
     };
 
     return (
