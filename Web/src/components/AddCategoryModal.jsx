@@ -12,6 +12,7 @@ import {
     FormControl,
     FormLabel,
 } from '@chakra-ui/react';
+import supabase from '../supabaseClient';
 
 const AddCategoryModal = ({ isOpenAddCategoryModal, setIsOpenAddCategoryModal }) => {
     const [categoryName, setCategoryName] = useState('');
@@ -33,6 +34,25 @@ const AddCategoryModal = ({ isOpenAddCategoryModal, setIsOpenAddCategoryModal })
         } else {
             setError('Category name can only contain letters');
         }
+    };
+
+    const handleAdd = async () => {
+        const sbAccessToken = localStorage.getItem('sb_access_token');
+        const { data: { user } } = await supabase.auth.getUser()
+        const userID = user?.id || '';
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/add_category`,{
+            method: "POST",
+            headers: {
+            "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ category: categoryName, sbAccessToken, userID }),
+        });
+        if (!response.ok) {
+            console.log(`response failed fetching at get expenses endpoint. This error occured: ${await response.json().message}`);
+            return;
+        }
+        const data = await response.json();
+        console.log(data.message);
     };
 
     return (
@@ -60,7 +80,8 @@ const AddCategoryModal = ({ isOpenAddCategoryModal, setIsOpenAddCategoryModal })
                     Cancel
                 </Button>
                 <Button 
-                    colorScheme="blue" 
+                    colorScheme="blue"
+                    onClick={handleAdd} 
                 >
                     Add
                 </Button>
