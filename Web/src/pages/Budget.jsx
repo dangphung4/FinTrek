@@ -1,5 +1,3 @@
-
-// src/pages/Budget.jsx
 import React, {useState} from 'react';
 import { Box, SimpleGrid, Progress, Text, VStack, useColorModeValue, Button, Flex, Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton } from '@chakra-ui/react';
 import { faker } from '@faker-js/faker';
