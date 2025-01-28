@@ -31,11 +31,13 @@ import {
 import { useBudget } from '../context/budgetContext';
 //component imports (sorted alphabetically)
 import AddCategoryModal from '../components/AddCategoryModal';
+import BudgetCategoryCard from '../components/BudgetCategoryCard';
 import BudgetWindowSelect from '../components/BudgetWindowSelect';
 import DashboardCard from '../components/DashboardCard';
 import EditTotalBudget from '../components/EditTotalBudget';
 import ModalCategoryBudgetSlider from '../components/ModalCategoryBudgetSlider';
 import PageHeader from '../components/PageHeader';
+
 
 const categories = ['Food', 'Transportation', 'Entertainment', 'Utilities', 'Shopping'];
 
@@ -124,19 +126,14 @@ function Budget() {
             const spent = faker.number.int({ min: 100, max: 1000 });
             const budget = faker.number.int({ min: spent, max: spent + 500 });
             const percentage = (spent / budget) * 100;
-            return (
-              <Box key={category} p={4} borderWidth="1px" borderRadius="md">
-                <VStack align="stretch" spacing={4}>
-                  <Flex justify="space-between">
-                    <Text fontWeight="bold">{category}</Text>
-                    <Text>${spent} / ${budget}</Text>
-                  </Flex>
-                  <Progress value={percentage} colorScheme={percentage > 90 ? "red" : "green"} size="sm" />
-                  <Text fontSize="sm" color={percentage > 90 ? "red.500" : "green.500"}>
-                    {percentage.toFixed(1)}% used
-                  </Text>
-                </VStack>
-              </Box>
+
+            return(
+              <BudgetCategoryCard
+                key={category} 
+                budget={budget}
+                spent={spent}
+                category={category}
+              />
             );
           })}
         </SimpleGrid>

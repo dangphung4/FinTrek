@@ -11,11 +11,14 @@ import {
     Input,
     FormControl,
     FormLabel,
+    useToast
 } from '@chakra-ui/react';
+import supabase from '../supabaseClient';
 
 const AddCategoryModal = ({ isOpenAddCategoryModal, setIsOpenAddCategoryModal }) => {
     const [categoryName, setCategoryName] = useState('');
     const [error, setError] = useState('');
+    const toast = useToast();
 
     const handleClose = () => {
         setIsOpenAddCategoryModal(false);
@@ -39,6 +42,41 @@ const AddCategoryModal = ({ isOpenAddCategoryModal, setIsOpenAddCategoryModal })
         } else {
             setError('Category name can only contain letters');
         }
+    };
+
+    const handleAdd = async () => {
+        const sbAccessToken = localStorage.getItem('sb_access_token');
+        const { data: { user } } = await supabase.auth.getUser()
+        const userID = user?.id || '';
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/add_category`,{
+            method: "POST",
+            headers: {
+            "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ category: categoryName, sbAccessToken, userID }),
+        });
+        handleClose();
+        if (!response.ok) {
+            const data = await response.json();
+            toast({
+                title: "Error Adding Category",
+                description: data.message || "Failed to add category",
+                status: "error",
+                duration: 3000,
+                isClosable: true,
+                position: "bottom"
+            });
+            return;
+        }
+        const data = await response.json();
+        toast({
+            title: "Category Added",
+            description: data.message,
+            status: "success",
+            duration: 3000,
+            isClosable: true,
+            position: "bottom"
+        });
     };
 
     return (
@@ -66,7 +104,8 @@ const AddCategoryModal = ({ isOpenAddCategoryModal, setIsOpenAddCategoryModal })
                     Cancel
                 </Button>
                 <Button 
-                    colorScheme="blue" 
+                    colorScheme="blue"
+                    onClick={handleAdd} 
                 >
                     Add
                 </Button>
