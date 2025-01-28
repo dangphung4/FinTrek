@@ -1,16 +1,43 @@
 
 // src/pages/Budget.jsx
 import React, {useState} from 'react';
-import { Box, SimpleGrid, Progress, Text, VStack, useColorModeValue, Button, Flex, Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton } from '@chakra-ui/react';
+//chakra ui imports
+import { 
+    Box, 
+    SimpleGrid, 
+    Progress, 
+    Text, 
+    VStack, 
+    useColorModeValue, 
+    Button, 
+    Flex, 
+    Modal, 
+    ModalOverlay, 
+    ModalContent, 
+    ModalHeader, 
+    ModalFooter, 
+    ModalBody, 
+    ModalCloseButton 
+} from '@chakra-ui/react';
+//faker import for fake data
 import { faker } from '@faker-js/faker';
-import { FaPlus, FaChartBar } from 'react-icons/fa';
-import PageHeader from '../components/PageHeader';
-import DashboardCard from '../components/DashboardCard';
-import BudgetWindowSelect from '../components/BudgetWindowSelect';
-import { FaRegEdit } from "react-icons/fa";
-import ModalCategoryBudgetSlider from '../components/ModalCategoryBudgetSlider';
+//icon imports
+import { 
+    FaPlus, 
+    FaChartBar, 
+    FaRegEdit 
+} from 'react-icons/fa';
+//context import for budget details
 import { useBudget } from '../context/budgetContext';
+//component imports (sorted alphabetically)
+import AddCategoryModal from '../components/AddCategoryModal';
+import BudgetCategoryCard from '../components/BudgetCategoryCard';
+import BudgetWindowSelect from '../components/BudgetWindowSelect';
+import DashboardCard from '../components/DashboardCard';
 import EditTotalBudget from '../components/EditTotalBudget';
+import ModalCategoryBudgetSlider from '../components/ModalCategoryBudgetSlider';
+import PageHeader from '../components/PageHeader';
+
 
 const categories = ['Food', 'Transportation', 'Entertainment', 'Utilities', 'Shopping'];
 
@@ -24,6 +51,9 @@ function Budget() {
   const {setAllocatedBudget, totalBudget} = useBudget();
 
   const [potentialTotalBudget, setPotentialTotalBudget] = useState(totalBudget.toString());
+
+  //variable necessary for holding open/closed state of the add category modal
+  const [isOpenAddCategoryModal, setIsOpenAddCategoryModal] = useState(false);
 
   const handleEditButtonClick = () => {
       setIsEditModalOpen(true);
@@ -88,7 +118,7 @@ function Budget() {
           <Text fontSize="xl" fontWeight="bold">Budget Breakdown</Text>
           <Box>
             <Button leftIcon={<FaRegEdit />} colorScheme="blue" width={{base:'43px', megasmall:'auto'}} mr={3} onClick={handleEditButtonClick}>Edit</Button>
-            <Button leftIcon={<FaPlus />} colorScheme="blue" width={{base:'86px',megasmall:'auto'}} >Add Category</Button>
+            <Button leftIcon={<FaPlus />} colorScheme="blue" width={{base:'86px',megasmall:'auto'}} onClick={() => {setIsOpenAddCategoryModal(true)}}>Add Category</Button>
           </Box>
         </Flex>
         <SimpleGrid columns={{ base: 1, md: 2 }} spacing={6}>
@@ -96,23 +126,19 @@ function Budget() {
             const spent = faker.number.int({ min: 100, max: 1000 });
             const budget = faker.number.int({ min: spent, max: spent + 500 });
             const percentage = (spent / budget) * 100;
-            return (
-              <Box key={category} p={4} borderWidth="1px" borderRadius="md">
-                <VStack align="stretch" spacing={4}>
-                  <Flex justify="space-between">
-                    <Text fontWeight="bold">{category}</Text>
-                    <Text>${spent} / ${budget}</Text>
-                  </Flex>
-                  <Progress value={percentage} colorScheme={percentage > 90 ? "red" : "green"} size="sm" />
-                  <Text fontSize="sm" color={percentage > 90 ? "red.500" : "green.500"}>
-                    {percentage.toFixed(1)}% used
-                  </Text>
-                </VStack>
-              </Box>
+
+            return(
+              <BudgetCategoryCard
+                key={category} 
+                budget={budget}
+                spent={spent}
+                category={category}
+              />
             );
           })}
         </SimpleGrid>
       </Box>
+      {/* modal for editing budgets (I will probably make this its own component down the line) */}
       <Modal isOpen={isEditModalOpen} onClose={handleCloseModal} size="2xl" isCentered>
           <ModalOverlay />
           <ModalContent>
@@ -137,6 +163,11 @@ function Budget() {
               </ModalFooter>
           </ModalContent>
       </Modal>
+
+      <AddCategoryModal 
+          isOpenAddCategoryModal={isOpenAddCategoryModal}
+          setIsOpenAddCategoryModal={setIsOpenAddCategoryModal}    
+      />
     </Box>
   );
 }
