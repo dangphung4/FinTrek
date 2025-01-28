@@ -1,17 +1,41 @@
 
 // src/pages/Budget.jsx
 import React, {useState} from 'react';
-import { Box, SimpleGrid, Progress, Text, VStack, useColorModeValue, Button, Flex, Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton } from '@chakra-ui/react';
+//chakra ui imports
+import { 
+    Box, 
+    SimpleGrid, 
+    Progress, 
+    Text, 
+    VStack, 
+    useColorModeValue, 
+    Button, 
+    Flex, 
+    Modal, 
+    ModalOverlay, 
+    ModalContent, 
+    ModalHeader, 
+    ModalFooter, 
+    ModalBody, 
+    ModalCloseButton 
+} from '@chakra-ui/react';
+//faker import for fake data
 import { faker } from '@faker-js/faker';
-import { FaPlus, FaChartBar } from 'react-icons/fa';
-import PageHeader from '../components/PageHeader';
-import DashboardCard from '../components/DashboardCard';
-import BudgetWindowSelect from '../components/BudgetWindowSelect';
-import { FaRegEdit } from "react-icons/fa";
-import ModalCategoryBudgetSlider from '../components/ModalCategoryBudgetSlider';
+//icon imports
+import { 
+    FaPlus, 
+    FaChartBar, 
+    FaRegEdit 
+} from 'react-icons/fa';
+//context import for budget details
 import { useBudget } from '../context/budgetContext';
-import EditTotalBudget from '../components/EditTotalBudget';
+//component imports (sorted alphabetically)
 import AddCategoryModal from '../components/AddCategoryModal';
+import BudgetWindowSelect from '../components/BudgetWindowSelect';
+import DashboardCard from '../components/DashboardCard';
+import EditTotalBudget from '../components/EditTotalBudget';
+import ModalCategoryBudgetSlider from '../components/ModalCategoryBudgetSlider';
+import PageHeader from '../components/PageHeader';
 
 const categories = ['Food', 'Transportation', 'Entertainment', 'Utilities', 'Shopping'];
 
