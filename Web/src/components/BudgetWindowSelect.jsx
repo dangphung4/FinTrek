@@ -19,6 +19,7 @@ const BudgetWindowSelect = ({ onWindowChange }) => {
             onChange={(e) => setSelectedWindow(e.target.value)}
             size="md"
             width={'62px'}
+            aria-label="Select budget window"
             mb={5}
         >
             <option value="Week">Week</option>
