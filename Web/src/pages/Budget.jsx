@@ -26,7 +26,8 @@ function Budget() {
 
   const handleApplyChanges = () => {
       //will add functionality to this later
-      //probably will involve 
+      //probably will involve sending new values for budget allocation amounts for different categories
+      //to endpoint that then makes appropriate changes in the database
   };
 
   return (
