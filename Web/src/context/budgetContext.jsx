@@ -23,7 +23,10 @@ export const BudgetProvider = ({ children, initTotalBudget }) => {
                 setAllocatedBudget,
                 totalBudget, 
                 setTotalBudget,
-                setCategoryToBudgetDictionary, 
+                categoryToBudgetDictionary,
+                setCategoryToBudgetDictionary,
+                newCategoryAdded,
+                setNewCategoryAdded,
                 reset 
             }}>
                 {children}
