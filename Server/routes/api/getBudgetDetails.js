@@ -23,9 +23,9 @@ router.post('/', function (req, response, next) {
             };
 
             if (selectUserBudgetDetails && selectUserBudgetDetails.length > 0){
-                return response.status(200).json(selectUserBudgetDetails);
+                return response.status(200).json({ budgetDetails: selectUserBudgetDetails });
             }else{
-                return response.status(404).json(null)
+                return response.status(404).json({ message: 'Could not find budget details for user' })
             };
 
         })
