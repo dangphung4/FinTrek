@@ -14,11 +14,14 @@ import {
     useToast
 } from '@chakra-ui/react';
 import supabase from '../supabaseClient';
+import { useBudget } from '../context/budgetContext';
 
 const AddCategoryModal = ({ isOpenAddCategoryModal, setIsOpenAddCategoryModal }) => {
     const [categoryName, setCategoryName] = useState('');
     const [error, setError] = useState('');
     const toast = useToast();
+
+    const { setNewCategoryAdded } = useBudget();
 
     const handleClose = () => {
         setIsOpenAddCategoryModal(false);
@@ -63,6 +66,8 @@ const AddCategoryModal = ({ isOpenAddCategoryModal, setIsOpenAddCategoryModal })
             return;
         }
         const data = await response.json();
+        setNewCategoryAdded((prev) => `${prev}a`);
+
         toast({
             title: "Category Added",
             description: data.message,
