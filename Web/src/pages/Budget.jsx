@@ -1,5 +1,3 @@
-
-// src/pages/Budget.jsx
 import React, {useState} from 'react';
 import { Box, SimpleGrid, Progress, Text, VStack, useColorModeValue, Button, Flex, Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton } from '@chakra-ui/react';
 import { faker } from '@faker-js/faker';
@@ -13,6 +11,7 @@ import { useBudget } from '../context/budgetContext';
 import EditTotalBudget from '../components/EditTotalBudget';
 import AddCategoryModal from '../components/AddCategoryModal';
 import BudgetCategoryCard from '../components/BudgetCategoryCard';
+import supabase from '../supabaseClient';
 
 const categories = ['Food', 'Transportation', 'Entertainment', 'Utilities', 'Shopping'];
 
@@ -23,12 +22,41 @@ function Budget() {
   const [budgetWindow, setBudgetWindow] = useState('Year');
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
-  const {setAllocatedBudget, totalBudget} = useBudget();
+  const {setAllocatedBudget, totalBudget, setCategoryToBudgetDictionary, newCategoryAdded} = useBudget();
 
   const [potentialTotalBudget, setPotentialTotalBudget] = useState(totalBudget.toString());
 
   //variable necessary for holding open/closed state of the add category modal
   const [isOpenAddCategoryModal, setIsOpenAddCategoryModal] = useState(false);
+
+  //call to rest api to get budget details
+  useEffect(() => {
+      const getBudgetDetailsCall = async () => {
+          const sbAccessToken = localStorage.getItem('sb_access_token');
+          const { data: { user } } = await supabase.auth.getUser();
+          const userID = user?.id || '';
+          const response = await fetch(`${import.meta.env.VITE_API_URL}/get_budget_details`, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json"
+              },
+              body: JSON.stringify({ userID, sbAccessToken }),
+          });
+    
+          const data = await response.json();
+    
+          if (!response.ok) {
+              console.log("Could not find budget details for user: ", data.message);
+              setCategoryToBudgetDictionary(null);
+              return;
+          }
+    
+          console.log("Found budget details for user");
+          setCategoryToBudgetDictionary(data.budgetDetails);
+      };
+    
+      getBudgetDetailsCall();
+  }, [newCategoryAdded]); //only executes when a new category gets added to the database to reduce calls
 
   const handleEditButtonClick = () => {
       setIsEditModalOpen(true);
