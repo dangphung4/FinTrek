@@ -6,6 +6,7 @@ export const BudgetProvider = ({ children, initTotalBudget }) => {
     const [allocatedBudget, setAllocatedBudget] = useState(0);
     const [totalBudget, setTotalBudget] = useState(initTotalBudget);
     const [reset, setReset] = useState(false);
+    const [categoryToBudgetDictionary, setCategoryToBudgetDictionary] = useState(null);
 
     const updateTotalBudget = (newTotal) => {
             if (newTotal < allocatedBudget){
@@ -20,7 +21,8 @@ export const BudgetProvider = ({ children, initTotalBudget }) => {
                 allocatedBudget, 
                 setAllocatedBudget,
                 totalBudget, 
-                setTotalBudget, 
+                setTotalBudget,
+                setCategoryToBudgetDictionary, 
                 reset 
             }}>
                 {children}
