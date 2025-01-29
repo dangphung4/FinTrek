@@ -49,6 +49,9 @@ app.use('/api/create_bank_account', apiCreateBankAccountRouter);
 const apiAddCategoryRouter = require('./routes/api/addCategory');
 app.use('/api/add_category', apiAddCategoryRouter);
 
+const apiGetBudgetDetailsRouter = require('./routes/api/getBudgetDetails');
+app.use('/api/get_budget_details', apiGetBudgetDetailsRouter);
+
 // Global error handler
 app.use((err, req, res, next) => {
   console.error(err.stack);
