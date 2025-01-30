@@ -1,16 +1,41 @@
 import React, {useState, useEffect} from 'react';
-import { Box, SimpleGrid, Progress, Text, VStack, useColorModeValue, Button, Flex, Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton } from '@chakra-ui/react';
+//chakra ui imports
+import { 
+    Box, 
+    SimpleGrid, 
+    Progress, 
+    Text, 
+    VStack, 
+    useColorModeValue, 
+    Button, 
+    Flex, 
+    Modal, 
+    ModalOverlay, 
+    ModalContent, 
+    ModalHeader, 
+    ModalFooter, 
+    ModalBody, 
+    ModalCloseButton 
+} from '@chakra-ui/react';
+//faker import for fake data
 import { faker } from '@faker-js/faker';
-import { FaPlus, FaChartBar } from 'react-icons/fa';
-import PageHeader from '../components/PageHeader';
-import DashboardCard from '../components/DashboardCard';
-import BudgetWindowSelect from '../components/BudgetWindowSelect';
-import { FaRegEdit } from "react-icons/fa";
-import ModalCategoryBudgetSlider from '../components/ModalCategoryBudgetSlider';
+//icon imports
+import { 
+    FaPlus, 
+    FaChartBar, 
+    FaRegEdit 
+} from 'react-icons/fa';
+//context import for budget details
 import { useBudget } from '../context/budgetContext';
-import EditTotalBudget from '../components/EditTotalBudget';
+//component imports (sorted alphabetically)
 import AddCategoryModal from '../components/AddCategoryModal';
 import BudgetCategoryCard from '../components/BudgetCategoryCard';
+import BudgetWindowSelect from '../components/BudgetWindowSelect';
+import DashboardCard from '../components/DashboardCard';
+import EditTotalBudget from '../components/EditTotalBudget';
+import ModalCategoryBudgetSlider from '../components/ModalCategoryBudgetSlider';
+import PageHeader from '../components/PageHeader';
+//supabase client import necessary for giving sb access token to backend
 import supabase from '../supabaseClient';
 
 const categories = ['Food', 'Transportation', 'Entertainment', 'Utilities', 'Shopping'];
@@ -73,7 +98,8 @@ function Budget() {
 
   const handleApplyChanges = () => {
       //will add functionality to this later
-      //probably will involve 
+      //probably will involve sending new values for budget allocation amounts for different categories
+      //to endpoint that then makes appropriate changes in the database
   };
 
   const handleBudgetChange = (e) => {

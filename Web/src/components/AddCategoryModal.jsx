@@ -32,8 +32,14 @@ const AddCategoryModal = ({ isOpenAddCategoryModal, setIsOpenAddCategoryModal })
     const handleInputChange = (e) => {
         const value = e.target.value;
         
-        // Only allow letters (A-Z, a-z) and spaces
-        if (/^[a-zA-Z\s]*$/.test(value)) {
+        // Check if all characters are letters or spaces
+        const isValid = value.split('').every(char => 
+            (char >= 'a' && char <= 'z') || 
+            (char >= 'A' && char <= 'Z') ||
+            char === ' '
+        );
+        
+        if (isValid) {
             setCategoryName(value);
             setError('');
         } else {
