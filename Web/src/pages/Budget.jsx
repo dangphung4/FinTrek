@@ -47,9 +47,7 @@ function Budget() {
   const [budgetWindow, setBudgetWindow] = useState('Year');
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
-  const {setAllocatedBudget, totalBudget, setCategoryToBudgetDictionary, newCategoryAdded} = useBudget();
-
-  const [potentialTotalBudget, setPotentialTotalBudget] = useState(totalBudget.toString());
+  const {setAllocatedBudget, totalBudget, setPotentialTotalBudget, categoryToBudgetDictionary, setCategoryToBudgetDictionary, newCategoryAdded} = useBudget();
 
   //variable necessary for holding open/closed state of the add category modal
   const [isOpenAddCategoryModal, setIsOpenAddCategoryModal] = useState(false);
@@ -151,20 +149,18 @@ function Budget() {
           </Box>
         </Flex>
         <SimpleGrid columns={{ base: 1, md: 2 }} spacing={6}>
-          {categories.map(category => {
-            const spent = faker.number.int({ min: 100, max: 1000 });
-            const budget = faker.number.int({ min: spent, max: spent + 500 });
-            const percentage = (spent / budget) * 100;
+          {categoryToBudgetDictionary ? (categoryToBudgetDictionary.map(object => {
+            const spent = faker.number.int({ min: 100, max: 500 });
 
             return(
               <BudgetCategoryCard
-                key={category} 
-                budget={budget}
+                key={object.category} 
+                budget={object.budget}
                 spent={spent}
-                category={category}
+                category={object.category}
               />
             );
-          })}
+          })) : (null)}
         </SimpleGrid>
       </Box>
       {/* modal for editing budgets (I will probably make this its own component down the line) */}
@@ -176,11 +172,22 @@ function Budget() {
               <ModalBody>
                   <EditTotalBudget 
                       handleBudgetChange={handleBudgetChange}
-                      potentialTotalBudget={potentialTotalBudget}    
                   />
                   {/* I will add self-balancing sliders here for each category */}
-                  <ModalCategoryBudgetSlider  category='Eating Out' />
-                  <ModalCategoryBudgetSlider  category='Groceries' />
+                  {categoryToBudgetDictionary ? (
+                      categoryToBudgetDictionary.map(object => {
+                          const budget = object.budget ? object.budget : 0;
+                          
+                          return (
+                              <ModalCategoryBudgetSlider
+                                  category={object.category}
+                                  budget={budget}
+                              />
+                          );
+                      })
+                  ) : (
+                      null
+                  )}
               </ModalBody>
               <ModalFooter>
                 <Button colorScheme="blue" mr={3} onClick={handleCloseModal}>
