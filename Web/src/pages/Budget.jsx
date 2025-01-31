@@ -47,9 +47,7 @@ function Budget() {
   const [budgetWindow, setBudgetWindow] = useState('Year');
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
-  const {setAllocatedBudget, totalBudget, categoryToBudgetDictionary, setCategoryToBudgetDictionary, newCategoryAdded} = useBudget();
-
-  const [potentialTotalBudget, setPotentialTotalBudget] = useState(totalBudget.toString());
+  const {setAllocatedBudget, totalBudget, setPotentialTotalBudget, categoryToBudgetDictionary, setCategoryToBudgetDictionary, newCategoryAdded} = useBudget();
 
   //variable necessary for holding open/closed state of the add category modal
   const [isOpenAddCategoryModal, setIsOpenAddCategoryModal] = useState(false);
@@ -162,7 +160,7 @@ function Budget() {
                 category={object.category}
               />
             );
-          })) : ({})}
+          })) : (null)}
         </SimpleGrid>
       </Box>
       {/* modal for editing budgets (I will probably make this its own component down the line) */}
@@ -174,11 +172,22 @@ function Budget() {
               <ModalBody>
                   <EditTotalBudget 
                       handleBudgetChange={handleBudgetChange}
-                      potentialTotalBudget={potentialTotalBudget}    
                   />
                   {/* I will add self-balancing sliders here for each category */}
-                  <ModalCategoryBudgetSlider  category='Eating Out' />
-                  <ModalCategoryBudgetSlider  category='Groceries' />
+                  {categoryToBudgetDictionary ? (
+                      categoryToBudgetDictionary.map(object => {
+                          const budget = object.budget ? object.budget : 0;
+                          
+                          return (
+                              <ModalCategoryBudgetSlider
+                                  category={object.category}
+                                  budget={budget}
+                              />
+                          );
+                      })
+                  ) : (
+                      null
+                  )}
               </ModalBody>
               <ModalFooter>
                 <Button colorScheme="blue" mr={3} onClick={handleCloseModal}>
