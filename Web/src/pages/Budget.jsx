@@ -47,7 +47,7 @@ function Budget() {
   const [budgetWindow, setBudgetWindow] = useState('Year');
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
-  const {setAllocatedBudget, totalBudget, setCategoryToBudgetDictionary, newCategoryAdded} = useBudget();
+  const {setAllocatedBudget, totalBudget, categoryToBudgetDictionary, setCategoryToBudgetDictionary, newCategoryAdded} = useBudget();
 
   const [potentialTotalBudget, setPotentialTotalBudget] = useState(totalBudget.toString());
 
@@ -151,20 +151,18 @@ function Budget() {
           </Box>
         </Flex>
         <SimpleGrid columns={{ base: 1, md: 2 }} spacing={6}>
-          {categories.map(category => {
-            const spent = faker.number.int({ min: 100, max: 1000 });
-            const budget = faker.number.int({ min: spent, max: spent + 500 });
-            const percentage = (spent / budget) * 100;
+          {categoryToBudgetDictionary ? (categoryToBudgetDictionary.map(object => {
+            const spent = faker.number.int({ min: 100, max: 500 });
 
             return(
               <BudgetCategoryCard
-                key={category} 
-                budget={budget}
+                key={object.category} 
+                budget={object.budget}
                 spent={spent}
-                category={category}
+                category={object.category}
               />
             );
-          })}
+          })) : ({})}
         </SimpleGrid>
       </Box>
       {/* modal for editing budgets (I will probably make this its own component down the line) */}
