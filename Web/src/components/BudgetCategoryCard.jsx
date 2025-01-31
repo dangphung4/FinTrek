@@ -12,13 +12,18 @@ const BudgetCategoryCard = ({
     budget,
     spent,
 }) => {
-    const percentage = (spent / budget) * 100;
+
+    const percentage = budget ? (spent / budget) * 100 : 0;
     return (
         <Box p={4} borderWidth="1px" borderRadius="md">
             <VStack align="stretch" spacing={4}>
                 <Flex justify="space-between">
                     <Text fontWeight="bold">{category}</Text>
-                    <Text>${spent} / ${budget}</Text>
+                    {budget ? (
+                            <Text>${spent} / ${budget}</Text>
+                        ) : (
+                            <Text>No budget set. Click edit to set.</Text>
+                    )}
                 </Flex>
                 <Progress value={percentage} colorScheme={percentage > 90 ? "red" : "green"} size="sm" />
                 <Text fontSize="sm" color={percentage > 90 ? "red.500" : "green.500"}>

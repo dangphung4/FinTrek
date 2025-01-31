@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 //chakra ui imports
 import { 
     Box, 
@@ -35,7 +35,8 @@ import DashboardCard from '../components/DashboardCard';
 import EditTotalBudget from '../components/EditTotalBudget';
 import ModalCategoryBudgetSlider from '../components/ModalCategoryBudgetSlider';
 import PageHeader from '../components/PageHeader';
-
+//supabase client import necessary for giving sb access token to backend
+import supabase from '../supabaseClient';
 
 const categories = ['Food', 'Transportation', 'Entertainment', 'Utilities', 'Shopping'];
 
@@ -46,12 +47,39 @@ function Budget() {
   const [budgetWindow, setBudgetWindow] = useState('Year');
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
-  const {setAllocatedBudget, totalBudget} = useBudget();
-
-  const [potentialTotalBudget, setPotentialTotalBudget] = useState(totalBudget.toString());
+  const {setAllocatedBudget, totalBudget, setPotentialTotalBudget, categoryToBudgetDictionary, setCategoryToBudgetDictionary, newCategoryAdded} = useBudget();
 
   //variable necessary for holding open/closed state of the add category modal
   const [isOpenAddCategoryModal, setIsOpenAddCategoryModal] = useState(false);
+
+  //call to rest api to get budget details
+  useEffect(() => {
+      const getBudgetDetailsCall = async () => {
+          const sbAccessToken = localStorage.getItem('sb_access_token');
+          const { data: { user } } = await supabase.auth.getUser();
+          const userID = user?.id || '';
+          const response = await fetch(`${import.meta.env.VITE_API_URL}/get_budget_details`, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json"
+              },
+              body: JSON.stringify({ userID, sbAccessToken }),
+          });
+    
+          const data = await response.json();
+    
+          if (!response.ok) {
+              console.log("Could not find budget details for user: ", data.message);
+              setCategoryToBudgetDictionary(null);
+              return;
+          }
+    
+          console.log("Found budget details for user: ", data.budgetDetails);
+          setCategoryToBudgetDictionary(data.budgetDetails);
+      };
+    
+      getBudgetDetailsCall();
+  }, [newCategoryAdded]); //only executes when a new category gets added to the database to reduce calls
 
   const handleEditButtonClick = () => {
       setIsEditModalOpen(true);
@@ -121,20 +149,18 @@ function Budget() {
           </Box>
         </Flex>
         <SimpleGrid columns={{ base: 1, md: 2 }} spacing={6}>
-          {categories.map(category => {
-            const spent = faker.number.int({ min: 100, max: 1000 });
-            const budget = faker.number.int({ min: spent, max: spent + 500 });
-            const percentage = (spent / budget) * 100;
+          {categoryToBudgetDictionary ? (categoryToBudgetDictionary.map(object => {
+            const spent = faker.number.int({ min: 100, max: 500 });
 
             return(
               <BudgetCategoryCard
-                key={category} 
-                budget={budget}
+                key={object.category} 
+                budget={object.budget}
                 spent={spent}
-                category={category}
+                category={object.category}
               />
             );
-          })}
+          })) : (null)}
         </SimpleGrid>
       </Box>
       {/* modal for editing budgets (I will probably make this its own component down the line) */}
@@ -146,11 +172,22 @@ function Budget() {
               <ModalBody>
                   <EditTotalBudget 
                       handleBudgetChange={handleBudgetChange}
-                      potentialTotalBudget={potentialTotalBudget}    
                   />
                   {/* I will add self-balancing sliders here for each category */}
-                  <ModalCategoryBudgetSlider  category='Eating Out' />
-                  <ModalCategoryBudgetSlider  category='Groceries' />
+                  {categoryToBudgetDictionary ? (
+                      categoryToBudgetDictionary.map(object => {
+                          const budget = object.budget ? object.budget : 0;
+                          
+                          return (
+                              <ModalCategoryBudgetSlider
+                                  category={object.category}
+                                  budget={budget}
+                              />
+                          );
+                      })
+                  ) : (
+                      null
+                  )}
               </ModalBody>
               <ModalFooter>
                 <Button colorScheme="blue" mr={3} onClick={handleCloseModal}>

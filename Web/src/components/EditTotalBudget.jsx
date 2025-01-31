@@ -7,8 +7,8 @@ import {
 } from '@chakra-ui/react';
 import { useBudget } from '../context/budgetContext';
 
-const EditTotalBudget = ({ handleBudgetChange, potentialTotalBudget }) => {
-    const { totalBudget, setTotalBudget } = useBudget();
+const EditTotalBudget = ({ handleBudgetChange }) => {
+    const { potentialTotalBudget } = useBudget();
 
     return (
         <Flex align="center" justifySelf={'center'} gap={4}>
