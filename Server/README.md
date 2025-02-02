@@ -18,19 +18,22 @@ To set up the server application locally, follow these steps:
 1. Make sure you have Python (v3.8 or above) and Docker installed on your machine.
 
 2. Clone the FinTrek repository and navigate to the `Server` directory:
-   ```
+
+   ```bash
    git clone https://github.com/dangphung4/fintrek.git
    cd fintrek/Server
    ```
 
 3. Create a virtual environment and activate it:
-   ```
+
+   ```bash
    python -m venv venv
    source venv/bin/activate  # On Windows, use `venv\Scripts\activate`
    ```
 
 4. Install the project dependencies:
-   ```
+
+   ```bash
    pip install -r requirements.txt
    ```
 
@@ -40,7 +43,8 @@ To set up the server application locally, follow these steps:
    - Update the Supabase connection details in `config.py`
 
 6. Start the development server:
-   ```
+
+   ```bash
    flask run
    ```
 
@@ -50,7 +54,7 @@ To set up the server application locally, follow these steps:
 
 The `Server` directory has the following structure:
 
-```
+```bash
 Server/
 ├── app/
 │   ├── models/

@@ -7,7 +7,7 @@ To maintain a consistent and readable codebase, please adhere to the following c
 - Use meaningful and descriptive names for variables, functions, and classes.
 - Follow the PEP 8 style guide for Python code and the Airbnb JavaScript Style Guide for JavaScript code.
 - Write comments to explain complex logic or non-obvious functionality.
-- Use 4 spaces for indentation (no tabs).    
+- Use 4 spaces for indentation (no tabs).
 
 ## Python
 

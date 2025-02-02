@@ -19,12 +19,17 @@ function App() {
   const muiThemeModed = muiTheme(themeMode);
 
   const [isAuthPath,setIsAuthPath] = useState(false)
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 
   // Effect to check the current path and update isAuthPath accordingly
   useEffect(() => {
     const authPaths = ['/login', '/signup', '/forgot-password', '/reset-password'];
     setIsAuthPath(authPaths.includes(location.pathname));
   }, [location.pathname]);
+
+  const handleSidebarCollapse = (collapsed: boolean) => {
+    setIsSidebarCollapsed(collapsed);
+  };
 
   const ensureValidSession = async () => {
     const session = await supabase.auth.getSession();
@@ -174,25 +179,29 @@ function App() {
                       p={8}
                       overflowY="auto"
                     >
-                      <RoutesWrapper setIsAuthPath={setIsAuthPath}/> {/* Use the new components */}
+                      <RoutesWrapper setIsAuthPath={setIsAuthPath}/> 
                     </Box>
                 </Flex>
               </Box>
             ) : (
               <Box minH="100vh">
-                <Navbar />
+                <Navbar isSidebarCollapsed={isSidebarCollapsed} />
                 <Flex>
-                  <Sidebar />
+                  <Sidebar onCollapse={handleSidebarCollapse} />
                   <Box
+                    position="relative"
                     flex="1"
-                    ml={{ base: 0, md: '240px' }}
+                    ml={{ 
+                      base: 0, 
+                      md: isSidebarCollapsed ? '60px' : '240px' 
+                    }}
                     mt="60px"
-                    p={{base:2,megasmall:4,xxs:8}}
+                    p={{base:2, megasmall:4, xxs:8}}
                     minH="calc(100vh - 60px)"
                     overflowY="auto"
-                    width="calc(100% - 240px)"
+                    transition="margin-left 0.2s"
                   >
-                    <RoutesWrapper setIsAuthPath={setIsAuthPath}/> {/* Use the new components */}
+                    <RoutesWrapper setIsAuthPath={setIsAuthPath}/>
                   </Box>
                 </Flex>
               </Box>
