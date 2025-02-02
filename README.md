@@ -50,7 +50,7 @@ Before running the application, make sure you have:
 
    For the Server (.env):
 
-   ```
+   ```bash
    PORT=8080
    PLAID_CLIENT_ID=your_plaid_client_id
    PLAID_SECRET=your_plaid_secret
@@ -61,7 +61,7 @@ Before running the application, make sure you have:
 
    For the Web (.env):
 
-   ```
+   ```bash
    VITE_SUPABASE_URL=your_supabase_url
    VITE_SUPABASE_KEY=your_supabase_anon_key
    VITE_API_URL=http://localhost:8080
@@ -171,7 +171,7 @@ Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduc
 - Rusul Abbas
 - Shams Abbas
 
-```
+```md
      ____________________________________________________
     |.==================================================,|
     ||  I WILL MERGE AND REVIEW PULL REQUESTS QUICKLY   ||

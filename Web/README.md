@@ -21,18 +21,21 @@ To set up the web application locally, follow these steps:
 1. Make sure you have Node.js (v14 or above) installed on your machine.
 
 2. Clone the FinTrek repository and navigate to the `Web` directory:
-   ```
+
+   ```bash
    git clone https://github.com/dangphung4/fintrek.git
    cd fintrek/Web
    ```
 
 3. Install the project dependencies:
-   ```
+
+   ```bash
    npm install
    ```
 
 4. Start the development server:
-   ```
+
+   ```bash
    npm run dev
    ```
 
@@ -42,7 +45,7 @@ To set up the web application locally, follow these steps:
 
 The `Web` directory has the following structure:
 
-```
+```bash
 Web/
 ├── public/
 │   └── ...
