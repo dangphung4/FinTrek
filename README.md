@@ -12,123 +12,162 @@ FinTrek is an innovative personal finance dashboard designed to help users track
 - Machine learning-powered spending analysis
 - Personalized financial advice and recommendations
 - Interactive charts and graphs for financial visualization
+- Plaid integration for bank account connectivity
+- Dark/Light mode support
 
 ## Technologies Used
 
-- **Backend**: Python with Flask
-- **Frontend**: React.js
-- **Data Processing**: Pandas
-- **AI/ML**: scikit-learn
-- **Database**: PostgreSQL (SUPABASE)
-- **Visualization**: D3.js / Chart.js
+- **Backend**: Node.js with Express
+- **Frontend**: React with Vite
+- **UI Libraries**: Chakra UI, Material-UI
+- **Data Visualization**: Recharts, D3.js
+- **Database**: PostgreSQL (Supabase)
+- **Authentication**: Supabase Auth
+- **Banking Integration**: Plaid API
 - **Deployment**: Docker, AWS/Vercel
 
-## Getting Started
+## Prerequisites
 
-### Prerequisites
+Before running the application, make sure you have:
 
-- Python 3.8+
-- Node.js 14+
-- Docker
-- PostgreSQL
+- Node.js (v14+)
+- npm or yarn
+- Git
+- A Supabase account and project
+- A Plaid developer account
+- Docker (optional, for containerized deployment)
 
-### Installation
+## Environment Setup
 
 1. Clone the repository:
-   ```
+
+   ```bash
    git clone https://github.com/dangphung4/fintrek.git
    cd fintrek
    ```
 
-2. Set up the backend:
+2. Set up environment variables:
+
+   For the Server (.env):
+
    ```
-   cd Server
-   python -m venv venv
-   source venv/bin/activate  # On Windows, use `venv\Scripts\activate`
-   pip install -r requirements.txt
+   PORT=8080
+   PLAID_CLIENT_ID=your_plaid_client_id
+   PLAID_SECRET=your_plaid_secret
+   PLAID_ENV=sandbox
+   SUPABASE_URL=your_supabase_url
+   SUPABASE_KEY=your_supabase_anon_key
    ```
 
-3. Set up the frontend:
+   For the Web (.env):
+
    ```
-   cd Web
+   VITE_SUPABASE_URL=your_supabase_url
+   VITE_SUPABASE_KEY=your_supabase_anon_key
+   VITE_API_URL=http://localhost:8080
+   ```
+
+## Installation & Running Locally
+
+### Backend Setup
+
+1. Navigate to the server directory:
+
+   ```bash
+   cd Server
+   ```
+
+2. Install dependencies:
+
+   ```bash
    npm install
    ```
 
-4. Set up the database:
-   - Create a new PostgreSQL database
-   - Update the database connection details in `Server/config.py`
+3. Start the server:
 
-5. Run the application:
-   ```
-   # In the Server directory
-   flask run
-
-   # In the Web directory
-   npm start
+   ```bash
+   npm run devStart
    ```
 
-## Project Structure
+The server will run on <http://localhost:8080>
 
-```
-fintrek/
-├── Server/
-│   ├── app/
-│   │   ├── models/
-│   │   ├── routes/
-│   │   ├── services/
-│   │   └── ml/
-│   ├── tests/
-│   ├── config.py
-│   └── requirements.txt
-├── Web/
-│   ├── public/
-│   ├── src/
-│   │   ├── components/
-│   │   ├── pages/
-│   │   ├── services/
-│   │   └── utils/
-│   └── package.json
-├── docs/
-└── README.md
-```
+### Frontend Setup
+
+1. Navigate to the web directory:
+
+   ```bash
+   cd Web
+   ```
+
+2. Install dependencies:
+
+   ```bash
+   npm install
+   ```
+
+3. Start the development server:
+
+   ```bash
+   npm run dev
+   ```
+
+The application will be available at <http://localhost:3000>
+
+## Docker Deployment
+
+1. Build the Docker images:
+
+   ```bash
+   # Build server
+   cd Server
+   docker build -t fintrek-server .
+
+   # Build web app
+   cd ../Web
+   docker build -t fintrek-web .
+   ```
+
+2. Run the containers:
+
+   ```bash
+   docker run -p 8080:8080 fintrek-server
+   docker run -p 3000:3000 fintrek-web
+   ```
+
+## Using the Application
+
+1. Create an account or log in
+2. Connect your bank accounts using Plaid
+3. Set up your budget categories and limits
+4. Track expenses and view financial insights
+5. Analyze spending patterns through interactive charts
+6. Receive personalized financial recommendations
+
+## Development Guidelines
+
+- Follow the coding conventions in CODINGCONVENTIONS.md
+- Use the provided issue templates for bug reports and feature requests
+- Submit pull requests following the guidelines in CONTRIBUTING.md
+- Test your changes thoroughly before submitting
+
+## Troubleshooting
+
+If you encounter issues:
+
+1. Check the console for error messages
+2. Verify environment variables are set correctly
+3. Ensure all dependencies are installed
+4. Check Supabase and Plaid dashboard for API errors
+5. Consult the [Getting Help](HELP-ME.md) guide
 
 ## Contributing
 
-TODO: Figure out tasks and deadlines
+Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct and the process for submitting pull requests.
 
-## Development Phases
-
-### Phase 1: Planning & Requirements (Week 1)
-- Define core features and user stories
-- Design database schema and API endpoints
-- Create UI/UX wireframes
-
-### Phase 2: Development (Weeks 2-3)
-- Implement backend APIs and database integration
-- Develop frontend dashboard components
-- Create ML models for spending analysis and recommendations
-
-### Phase 3: Testing & Deployment (Week 4)
-- Conduct thorough testing, including security testing for financial data
-- Deploy the application and set up monitoring
-- Prepare user documentation and guides
-
-## Learning Outcomes
-
-Through this project, you'll gain experience in:
-- Financial data analysis and visualization
-- AI-driven personalized recommendations
-- Full-stack web development with a focus on user experience (UX)
-- Security practices for handling sensitive financial data
-
-## License
-
-TODO: Licensing?
-
-## Acknowledgements
+## Team
 
 - Alejandro Manrique-Pinell
-- Dang Phung
+- Dang Phung (Project Lead)
 - Rusul Abbas
 - Shams Abbas
 
