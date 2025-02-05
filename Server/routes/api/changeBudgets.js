@@ -14,7 +14,9 @@ router.post('/', function (req, response, next) {
                     .upsert({
                         id: userID,
                         budget_total: newTotal
-                    });
+                    },
+                    { onConflict: 'id' }
+                    );
                 
             if (upsertExistingUserBudgetTotalError){
                 return response.status(400).json({ message: `Error occurred on upsert for new budget total for user: ${upsertExistingUserBudgetTotalError}` });
@@ -28,7 +30,7 @@ router.post('/', function (req, response, next) {
 
             const { error: categoryBudgetsUpsertError } = await supabase
                 .from("userBudgets")
-                .upsert(categoryBudgetsToUpsert);
+                .upsert(categoryBudgetsToUpsert, { onConflict: ['id', 'category'] });
             
             if (categoryBudgetsUpsertError){
                 return response.status(400).json({ message: `Error occurred trying to upsert new budgets for categories: ${categoryBudgetsUpsertError}` });
