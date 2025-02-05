@@ -52,6 +52,9 @@ app.use('/api/add_category', apiAddCategoryRouter);
 const apiGetBudgetDetailsRouter = require('./routes/api/getBudgetDetails');
 app.use('/api/get_budget_details', apiGetBudgetDetailsRouter);
 
+const apiChangeBudgets = require('./routes/api/changeBudgets');
+app.use('/api/change_budgets', apiChangeBudgets);
+
 // Global error handler
 app.use((err, req, res, next) => {
   console.error(err.stack);
