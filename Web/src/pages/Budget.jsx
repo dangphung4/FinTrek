@@ -47,7 +47,7 @@ function Budget() {
   const [budgetWindow, setBudgetWindow] = useState('Year');
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
-  const {setAllocatedBudget, totalBudget, setPotentialTotalBudget, categoryToBudgetDictionary, setCategoryToBudgetDictionary, newCategoryAdded} = useBudget();
+  const {setAllocatedBudget, budgetsEdited, setBudgetsEdited, totalBudget, setTotalBudget, potentialTotalBudget, setPotentialTotalBudget, categoryToBudgetDictionary, setCategoryToBudgetDictionary, potentialCategoryToBudgetDictionary, setPotentialCategoryToBudgetDictionary, newCategoryAdded} = useBudget();
 
   //variable necessary for holding open/closed state of the add category modal
   const [isOpenAddCategoryModal, setIsOpenAddCategoryModal] = useState(false);
@@ -71,15 +71,21 @@ function Budget() {
           if (!response.ok) {
               console.log("Could not find budget details for user: ", data.message);
               setCategoryToBudgetDictionary(null);
+              setPotentialCategoryToBudgetDictionary(null);
               return;
           }
     
           console.log("Found budget details for user: ", data.budgetDetails);
+          console.log("Found budget total for user: ", data.budgetTotal);
+
+          setTotalBudget(data.budgetTotal);
+          setPotentialTotalBudget(data.budgetTotal);
           setCategoryToBudgetDictionary(data.budgetDetails);
+          setPotentialCategoryToBudgetDictionary(data.budgetDetails);
       };
     
       getBudgetDetailsCall();
-  }, [newCategoryAdded]); //only executes when a new category gets added to the database to reduce calls
+  }, [newCategoryAdded, budgetsEdited]); //only executes when a new category gets added to the database to reduce calls
 
   const handleEditButtonClick = () => {
       setIsEditModalOpen(true);
@@ -92,12 +98,34 @@ function Budget() {
       // in the future will need to not set allocated budget to 0 but set it whatever it was before according to the database
       // will also need a way of resetting each slider to their original values, probably with context and a new useEffect (within the slider component) with something from the context in the dependency array
       setPotentialTotalBudget(totalBudget.toString());
+      setPotentialCategoryToBudgetDictionary(categoryToBudgetDictionary);
   };
 
-  const handleApplyChanges = () => {
+  const handleApplyChanges = async() => {
       //will add functionality to this later
       //probably will involve sending new values for budget allocation amounts for different categories
       //to endpoint that then makes appropriate changes in the database
+      const sbAccessToken = localStorage.getItem('sb_access_token');
+      const { data: { user } } = await supabase.auth.getUser();
+      const userID = user?.id || '';
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/change_budgets`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ userID, sbAccessToken, newCategoryToBudgetDictionary: potentialCategoryToBudgetDictionary, newTotal: potentialTotalBudget }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+          console.log("Error occurred trying to edit budgets: ", data.message);
+          return;
+      }
+
+      console.log("Successfully edited budgets")
+      setBudgetsEdited((prev) => `${prev}a`);
+      setIsEditModalOpen(false);
   };
 
   const handleBudgetChange = (e) => {
@@ -149,18 +177,19 @@ function Budget() {
           </Box>
         </Flex>
         <SimpleGrid columns={{ base: 1, md: 2 }} spacing={6}>
-          {categoryToBudgetDictionary ? (categoryToBudgetDictionary.map(object => {
-            const spent = faker.number.int({ min: 100, max: 500 });
-
-            return(
-              <BudgetCategoryCard
-                key={object.category} 
-                budget={object.budget}
-                spent={spent}
-                category={object.category}
-              />
-            );
-          })) : (null)}
+          {categoryToBudgetDictionary ? (Object.entries(categoryToBudgetDictionary).map(([category, budget]) => {
+              const spent = faker.number.int({ min: 100, max: 500 });
+              
+              return (
+                  <BudgetCategoryCard
+                      key={category}
+                      budget={budget}
+                      spent={spent}
+                      category={category}
+                  />
+              );
+                })
+            ) : null}
         </SimpleGrid>
       </Box>
       {/* modal for editing budgets (I will probably make this its own component down the line) */}
@@ -175,19 +204,18 @@ function Budget() {
                   />
                   {/* I will add self-balancing sliders here for each category */}
                   {categoryToBudgetDictionary ? (
-                      categoryToBudgetDictionary.map(object => {
-                          const budget = object.budget ? object.budget : 0;
+                      Object.entries(categoryToBudgetDictionary).map(([category, budget]) => {
+                          const budgetValue = budget || 0;
                           
                           return (
                               <ModalCategoryBudgetSlider
-                                  category={object.category}
-                                  budget={budget}
+                                  key={category}
+                                  category={category}
+                                  budget={budgetValue}
                               />
                           );
                       })
-                  ) : (
-                      null
-                  )}
+                  ) : null}
               </ModalBody>
               <ModalFooter>
                 <Button colorScheme="blue" mr={3} onClick={handleCloseModal}>
