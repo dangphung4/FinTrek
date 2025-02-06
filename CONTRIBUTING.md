@@ -12,32 +12,37 @@ Thank you for your interest in contributing to FinTrek! This guide will walk you
 1. Fork the FinTrek repository on GitHub by clicking the "Fork" button in the top-right corner of the repository page.
 
 2. Clone your forked repository to your local machine:
-   ```
+
+   ```bash
    git clone https://github.com/your-username/fintrek.git
    cd fintrek
    ```
 
 3. Add the original repository as a remote named "upstream":
-   ```
+
+   ```bash
    git remote add upstream https://github.com/dangphung4/fintrek.git
    ```
 
 4. Verify that you have two remotes: "origin" pointing to your fork and "upstream" pointing to the original repository:
-   ```
+
+   ```bash
    git remote -v
    ```
 
 ## Creating a New Branch
 
 1. Before starting work on a new feature or bug fix, make sure your local repository is up to date with the latest changes from the upstream repository:
-   ```
+
+   ```bash
    git fetch upstream
    git checkout main
    git merge upstream/main
    ```
 
 2. Create a new branch for your feature or bug fix using the naming convention `name/feature-name`:
-   ```
+
+   ```bash
    git checkout -b your-name/feature-name
    ```
 
@@ -46,13 +51,15 @@ Thank you for your interest in contributing to FinTrek! This guide will walk you
 1. Make your changes in the new branch, following the project's coding conventions and best practices.
 
 2. Commit your changes with a descriptive commit message:
-   ```
+
+   ```bash
    git add .
    git commit -m "Add feature XYZ"
    ```
 
 3. Push your changes to your forked repository:
-   ```
+
+   ```bash
    git push origin your-name/feature-name
    ```
 
@@ -71,7 +78,8 @@ Thank you for your interest in contributing to FinTrek! This guide will walk you
 ## Keeping Your Fork Up to Date
 
 1. Periodically, you should sync your fork with the upstream repository to keep it up to date:
-   ```
+
+   ```bash
    git fetch upstream
    git checkout main
    git merge upstream/main
