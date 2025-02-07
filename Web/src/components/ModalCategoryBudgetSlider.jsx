@@ -11,8 +11,16 @@ import {
 import { useBudget } from '../context/budgetContext';
 
 const ModalCategoryBudgetSlider = ({ category, budget }) => {
-    const { allocatedBudget, setAllocatedBudget, potentialTotalBudget } = useBudget();
+    const [hasMounted, setHasMounted] = useState(false);
+    const { allocatedBudget, setAllocatedBudget, potentialTotalBudget, setPotentialCategoryToBudgetDictionary } = useBudget();
     const [sliderValue, setSliderValue] = useState(budget);
+
+    const editPotentialBudgetForCategory = (newValue) => {
+        setPotentialCategoryToBudgetDictionary(prev => ({
+            ...prev,
+            [category]: newValue
+        }));
+    };
     
     const handleSliderChange = (newValue) => {
         // Calculate how much this slider's change would affect the total allocated budget
@@ -21,22 +29,29 @@ const ModalCategoryBudgetSlider = ({ category, budget }) => {
         
         if (Number(newValue) < Number(sliderValue)) {
             setSliderValue(newValue);
+            editPotentialBudgetForCategory(newValue);
             setAllocatedBudget(newAllocatedBudget);
             return;
         }
         // Only allow the change if it wouldn't exceed the total budget
         if (newAllocatedBudget <= Number(potentialTotalBudget)) {
             setSliderValue(newValue);
+            editPotentialBudgetForCategory(newValue);
             setAllocatedBudget(newAllocatedBudget);
         } else {
             // If the change would exceed the budget, set the slider to the maximum allowed value
             const maxAllowedValue = Number(sliderValue) + (Number(potentialTotalBudget) - Number(allocatedBudget));
             setSliderValue(maxAllowedValue);
+            editPotentialBudgetForCategory(newValue);
             setAllocatedBudget(potentialTotalBudget);
         }
     };
 
     useEffect(() => {
+            if (!hasMounted) {
+                setHasMounted(true);
+                return;
+            }
             setSliderValue(0);
             setAllocatedBudget(0);
     },[potentialTotalBudget]);
